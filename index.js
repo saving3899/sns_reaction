@@ -3181,15 +3181,7 @@ Stats: 15L 2S 8C
             }
             // ---------------------------------------
 
-            $('body').append(dropdown);
-
-            // Trigger auto-resize for textarea AFTER adding to DOM
-            setTimeout(() => {
-                dropdown.find('textarea.sns-menu-input').each(function () {
-                    this.style.height = 'auto';
-                    this.style.height = (this.scrollHeight) + 'px';
-                });
-            }, 0);
+            // Position calculation moved after append to get accurate dimensions
 
             // Re-bind values?
             // Since we grabbed HTML, connection to original inputs is lost.
@@ -3206,32 +3198,79 @@ Stats: 15L 2S 8C
             const winWidth = $(window).width();
             const winHeight = $(window).height();
 
-            // 220px width
-            let leftPos = rect.right - 220;
-            let topPos = rect.bottom + 5;
+            // Need to get dropdown dimensions after adding to DOM
+            $('body').append(dropdown);
+            const dropdownWidth = dropdown.outerWidth();
+            let dropdownHeight = dropdown.outerHeight();
 
-            // Boundary checks
-            if (leftPos < 10) leftPos = 10;
-            if (topPos + dropdown.outerHeight() > winHeight) {
-                // Flip upwards if running off bottom
-                topPos = rect.top - dropdown.outerHeight() - 5;
+            // Start with default position (below button, aligned to right edge)
+            let leftPos = rect.right - dropdownWidth;
+            let topPos = rect.bottom + 5;
+            let maxHeight = null;
+
+            // Boundary checks - all four edges
+            // Left edge
+            if (leftPos < 10) {
+                leftPos = 10;
+            }
+            // Right edge
+            if (leftPos + dropdownWidth > winWidth - 10) {
+                leftPos = winWidth - dropdownWidth - 10;
             }
 
-            dropdown.css({
+            // Calculate available space above and below
+            const spaceBelow = winHeight - rect.bottom - 15;
+            const spaceAbove = rect.top - 15;
+
+            // Bottom edge - flip upwards if not enough space below
+            if (dropdownHeight > spaceBelow) {
+                if (spaceAbove > spaceBelow) {
+                    // More space above - position above button
+                    topPos = rect.top - Math.min(dropdownHeight, spaceAbove) - 5;
+                    maxHeight = spaceAbove;
+                } else {
+                    // More space below - keep below but limit height
+                    maxHeight = spaceBelow;
+                }
+            }
+
+            // Ensure topPos is not negative
+            if (topPos < 10) {
+                topPos = 10;
+            }
+
+            // Apply max-height if content is too tall for available space
+            const cssProps = {
                 top: topPos + 'px',
                 left: leftPos + 'px',
                 right: 'auto',
                 bottom: 'auto',
-                zIndex: 99999 // Highest
-            });
+                zIndex: 99999
+            };
 
-            // Outside click handler - use capture phase to detect clicks even when stopPropagation is used
+            if (maxHeight && dropdownHeight > maxHeight) {
+                cssProps.maxHeight = maxHeight + 'px';
+                cssProps.overflowY = 'auto';
+            }
+
+            dropdown.css(cssProps);
+
+            // Outside click/scroll handler - use capture phase to detect clicks even when stopPropagation is used
             const closeHandler = (e) => {
                 // Don't close if clicking inside the menu or ANY sns header button (for toggle to work)
                 if ($(e.target).closest('#sns-global-menu').length ||
                     $(e.target).closest('.sns-menu-container').length) {
                     return;
                 }
+
+                // For scroll events, also check if focus is inside the menu (mobile keyboard opening causes scroll)
+                if (e.type === 'scroll') {
+                    const activeEl = document.activeElement;
+                    if (activeEl && $(activeEl).closest('#sns-global-menu').length > 0) {
+                        return;
+                    }
+                }
+
                 $('#sns-global-menu').remove();
                 document.removeEventListener('mousedown', closeHandler, true);
                 document.removeEventListener('scroll', closeHandler, true);
@@ -3241,9 +3280,17 @@ Stats: 15L 2S 8C
 
             // Handle iframe clicks - window loses focus when clicking into iframe
             const blurHandler = () => {
-                // Small delay to check if focus moved to iframe
+                // Small delay to check where focus moved
                 setTimeout(() => {
-                    if (document.activeElement && document.activeElement.tagName === 'IFRAME') {
+                    const activeEl = document.activeElement;
+
+                    // Don't close if focus is inside the dropdown menu (e.g., textarea, input, select)
+                    if (activeEl && $(activeEl).closest('#sns-global-menu').length > 0) {
+                        return;
+                    }
+
+                    // Only close if focus moved to iframe
+                    if (activeEl && activeEl.tagName === 'IFRAME') {
                         $('#sns-global-menu').remove();
                         document.removeEventListener('mousedown', closeHandler, true);
                         document.removeEventListener('scroll', closeHandler, true);
