@@ -251,7 +251,7 @@
                                         <select class="sns-menu-select" onchange="window.SNS_Reactions.Actions.setPreset(this.value)">
                                             ${presetOptions}
                                         </select>
-                                        <textarea class="sns-menu-input" style="width:100%; text-align:left; margin-top:4px; resize:none; overflow-y:auto; min-height:30px; max-height:120px; padding: 4px;" rows="1" placeholder="추가 지시사항 입력" spellcheck="false" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';window.SNS_Reactions.Actions.setAdditionalInstruction(this.value)">${window.SNS_Reactions.Utils.escapeHtml(settingsData.additionalInstruction || '')}</textarea>
+                                        <textarea class="sns-menu-input" style="width:100%; text-align:left; margin-top:4px; resize:none; overflow-y:auto; min-height:30px; max-height:120px; padding: 4px;" rows="1" placeholder="추가 지시사항 입력" spellcheck="false" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';window.SNS_Reactions.Actions.setAdditionalInstruction(this.value)" onblur="window.SNS_Reactions.Actions.syncAdditionalInstructionUI()">${window.SNS_Reactions.Utils.escapeHtml(settingsData.additionalInstruction || '')}</textarea>
                                     </div>
                                 </div>
                                 <div class="sns-menu-section">
@@ -303,7 +303,7 @@
                                 </select>
                             </div>
                             <div class="sns-start-row">
-                                <textarea class="sns-start-instruction-input" placeholder="추가 지시사항 입력" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';window.SNS_Reactions.Actions.setAdditionalInstruction(this.value)" style="flex:1; padding: 6px; border-radius:4px; border:1px solid rgba(127,127,127,0.3); resize:none; overflow-y:hidden; min-height:34px;" rows="1" spellcheck="false">${window.SNS_Reactions.Utils.escapeHtml(settingsData.additionalInstruction || '')}</textarea>
+                                <textarea class="sns-start-instruction-input" placeholder="추가 지시사항 입력" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';window.SNS_Reactions.Actions.setAdditionalInstruction(this.value)" onblur="window.SNS_Reactions.Actions.syncAdditionalInstructionUI()" style="flex:1; padding: 6px; border-radius:4px; border:1px solid rgba(127,127,127,0.3); resize:none; overflow-y:hidden; min-height:34px;" rows="1" spellcheck="false">${window.SNS_Reactions.Utils.escapeHtml(settingsData.additionalInstruction || '')}</textarea>
                             </div>
                             <button class="sns-generate-btn sns-start-generate-btn">
                                 <i class="fa-solid fa-wand-magic-sparkles"></i> SNS 생성
@@ -3174,10 +3174,10 @@ Stats: 15L 2S 8C
                 const instInput = dropdown.find('.sns-menu-input[placeholder=\"추가 지시사항 입력\"]');
                 instInput.val(addInst);
 
+                // Height auto-resize only, save/sync handled by inline handlers
                 instInput.on('input', function () {
                     this.style.height = 'auto';
                     this.style.height = this.scrollHeight + 'px';
-                    window.SNS_Reactions.Actions.setAdditionalInstruction($(this).val());
                 });
 
                 // 5. Sync Language
@@ -3392,30 +3392,34 @@ Stats: 15L 2S 8C
             const settings = window.SNS_Reactions_Settings_Instance;
             if (settings) {
                 settings.settings.additionalInstruction = val;
-                // Use save(false) to prevent event trigger which can cause loops
+                // Only save, no sync - sync happens on blur via syncAdditionalInstructionUI()
                 settings.save(false);
-
-                // Get the currently focused element to avoid re-triggering input events
-                const activeElement = document.activeElement;
-
-                // Real-time sync across all UI locations
-                // Sync to dropdown menu textarea (if open) - skip if it's the active element
-                const globalMenuInput = $('#sns-global-menu textarea.sns-menu-input[placeholder="추가 지시사항 입력"]');
-                if (globalMenuInput.length > 0 && globalMenuInput[0] !== activeElement && globalMenuInput.val() !== val) {
-                    globalMenuInput.val(val);
-                    globalMenuInput.css('height', 'auto');
-                    globalMenuInput.css('height', globalMenuInput[0].scrollHeight + 'px');
-                }
-
-                // Sync to initial generate button textarea (all instances) - skip if it's the active element
-                $('.sns-start-instruction-input').each(function () {
-                    if (this !== activeElement && $(this).val() !== val) {
-                        $(this).val(val);
-                        this.style.height = 'auto';
-                        this.style.height = this.scrollHeight + 'px';
-                    }
-                });
             }
+        },
+
+        // Separate sync function called on blur to avoid infinite loops
+        syncAdditionalInstructionUI: () => {
+            const settings = window.SNS_Reactions_Settings_Instance;
+            if (!settings) return;
+
+            const val = settings.settings.additionalInstruction || '';
+
+            // Sync to dropdown menu textarea (if open)
+            const globalMenuInput = $('#sns-global-menu textarea.sns-menu-input[placeholder="추가 지시사항 입력"]');
+            if (globalMenuInput.length > 0 && globalMenuInput.val() !== val) {
+                globalMenuInput.val(val);
+                globalMenuInput.css('height', 'auto');
+                globalMenuInput.css('height', globalMenuInput[0].scrollHeight + 'px');
+            }
+
+            // Sync to initial generate button textarea (all instances)
+            $('.sns-start-instruction-input').each(function () {
+                if ($(this).val() !== val) {
+                    $(this).val(val);
+                    this.style.height = 'auto';
+                    this.style.height = this.scrollHeight + 'px';
+                }
+            });
         },
 
         setLanguage: (val) => {
