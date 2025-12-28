@@ -2,7 +2,7 @@
     "display_name": "SNS 반응",
     "loading_order": 100,
     "author": "Saving3899",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "js": "index.js",
     "css": "style.css"
 }
