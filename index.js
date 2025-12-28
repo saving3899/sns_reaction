@@ -3392,20 +3392,24 @@ Stats: 15L 2S 8C
             const settings = window.SNS_Reactions_Settings_Instance;
             if (settings) {
                 settings.settings.additionalInstruction = val;
-                settings.save();
+                // Use save(false) to prevent event trigger which can cause loops
+                settings.save(false);
+
+                // Get the currently focused element to avoid re-triggering input events
+                const activeElement = document.activeElement;
 
                 // Real-time sync across all UI locations
-                // Sync to dropdown menu textarea (if open)
+                // Sync to dropdown menu textarea (if open) - skip if it's the active element
                 const globalMenuInput = $('#sns-global-menu textarea.sns-menu-input[placeholder="추가 지시사항 입력"]');
-                if (globalMenuInput.length > 0 && globalMenuInput.val() !== val) {
+                if (globalMenuInput.length > 0 && globalMenuInput[0] !== activeElement && globalMenuInput.val() !== val) {
                     globalMenuInput.val(val);
                     globalMenuInput.css('height', 'auto');
                     globalMenuInput.css('height', globalMenuInput[0].scrollHeight + 'px');
                 }
 
-                // Sync to initial generate button textarea (all instances)
+                // Sync to initial generate button textarea (all instances) - skip if it's the active element
                 $('.sns-start-instruction-input').each(function () {
-                    if ($(this).val() !== val) {
+                    if (this !== activeElement && $(this).val() !== val) {
                         $(this).val(val);
                         this.style.height = 'auto';
                         this.style.height = this.scrollHeight + 'px';
