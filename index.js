@@ -251,7 +251,7 @@
                                         <select class="sns-menu-select" onchange="window.SNS_Reactions.Actions.setPreset(this.value)">
                                             ${presetOptions}
                                         </select>
-                                        <textarea class="sns-menu-input" style="width:100%; text-align:left; margin-top:4px; resize:none; overflow-y:auto; min-height:30px; max-height:120px; padding: 4px;" rows="1" placeholder="추가 지시사항 입력" spellcheck="false" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';window.SNS_Reactions.Actions.setAdditionalInstruction(this.value)" onblur="window.SNS_Reactions.Actions.syncAdditionalInstructionUI()">${window.SNS_Reactions.Utils.escapeHtml(settingsData.additionalInstruction || '')}</textarea>
+                                        <textarea class="sns-menu-input" style="width:100%; text-align:left; margin-top:4px; resize:none; overflow-y:auto; min-height:60px; max-height:120px; padding: 4px;" rows="3" placeholder="추가 지시사항 입력" spellcheck="false" oninput="window.SNS_Reactions.Actions.setAdditionalInstruction(this.value)" onblur="window.SNS_Reactions.Actions.syncAdditionalInstructionUI()">${window.SNS_Reactions.Utils.escapeHtml(settingsData.additionalInstruction || '')}</textarea>
                                     </div>
                                 </div>
                                 <div class="sns-menu-section">
@@ -303,7 +303,7 @@
                                 </select>
                             </div>
                             <div class="sns-start-row">
-                                <textarea class="sns-start-instruction-input" placeholder="추가 지시사항 입력" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';window.SNS_Reactions.Actions.setAdditionalInstruction(this.value)" onblur="window.SNS_Reactions.Actions.syncAdditionalInstructionUI()" style="flex:1; padding: 6px; border-radius:4px; border:1px solid rgba(127,127,127,0.3); resize:none; overflow-y:hidden; min-height:34px;" rows="1" spellcheck="false">${window.SNS_Reactions.Utils.escapeHtml(settingsData.additionalInstruction || '')}</textarea>
+                                <textarea class="sns-start-instruction-input" placeholder="추가 지시사항 입력" oninput="window.SNS_Reactions.Actions.setAdditionalInstruction(this.value)" onblur="window.SNS_Reactions.Actions.syncAdditionalInstructionUI()" style="flex:1; padding: 6px; border-radius:4px; border:1px solid rgba(127,127,127,0.3); resize:none; overflow-y:auto; min-height:60px;" rows="3" spellcheck="false">${window.SNS_Reactions.Utils.escapeHtml(settingsData.additionalInstruction || '')}</textarea>
                             </div>
                             <button class="sns-generate-btn sns-start-generate-btn">
                                 <i class="fa-solid fa-wand-magic-sparkles"></i> SNS 생성
@@ -3173,12 +3173,7 @@ Stats: 15L 2S 8C
                 const addInst = settings.settings.additionalInstruction || "";
                 const instInput = dropdown.find('.sns-menu-input[placeholder=\"추가 지시사항 입력\"]');
                 instInput.val(addInst);
-
-                // Height auto-resize only, save/sync handled by inline handlers
-                instInput.on('input', function () {
-                    this.style.height = 'auto';
-                    this.style.height = this.scrollHeight + 'px';
-                });
+                // Height auto-resize handled by inline oninput handler
 
                 // 5. Sync Language
                 const lang = settings.settings.language || 'ko';
@@ -3391,16 +3386,18 @@ Stats: 15L 2S 8C
         setAdditionalInstruction: (val) => {
             const settings = window.SNS_Reactions_Settings_Instance;
             if (settings) {
+                // Only store in memory, no save - save happens on blur
                 settings.settings.additionalInstruction = val;
-                // Only save, no sync - sync happens on blur via syncAdditionalInstructionUI()
-                settings.save(false);
             }
         },
 
-        // Separate sync function called on blur to avoid infinite loops
+        // Sync function called on blur - also saves settings
         syncAdditionalInstructionUI: () => {
             const settings = window.SNS_Reactions_Settings_Instance;
             if (!settings) return;
+
+            // Save settings on blur
+            settings.save(false);
 
             const val = settings.settings.additionalInstruction || '';
 
