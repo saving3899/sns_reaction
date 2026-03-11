@@ -1,4 +1,34 @@
 /* SNS Reactions CSS Reset & Scoping */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-jp-dynamic-subset.min.css');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+
+/* --- High Specificity Font Lock --- */
+/* (2,1,0)+ specificity to prevent ST Custom Themes from overriding */
+.sns-reaction-wrapper:not(#_):not(#__),
+.sns-reaction-wrapper:not(#_):not(#__) div,
+.sns-reaction-wrapper:not(#_):not(#__) span,
+.sns-reaction-wrapper:not(#_):not(#__) p,
+.sns-reaction-wrapper:not(#_):not(#__) a,
+.sns-reaction-wrapper:not(#_):not(#__) label,
+.sns-reaction-wrapper:not(#_):not(#__) button,
+.sns-reaction-wrapper:not(#_):not(#__) input,
+.sns-reaction-wrapper:not(#_):not(#__) select,
+.sns-reaction-wrapper:not(#_):not(#__) textarea,
+.sns-reaction-wrapper:not(#_):not(#__) pre,
+.sns-reaction-wrapper:not(#_):not(#__) h3,
+.sns-reaction-wrapper:not(#_):not(#__) h4,
+.sns-reaction-wrapper:not(#_):not(#__) li,
+#sns-global-menu:not(#_):not(#__),
+#sns-global-menu:not(#_):not(#__) div,
+#sns-global-menu:not(#_):not(#__) span,
+#sns-global-menu:not(#_):not(#__) button,
+#sns-global-menu:not(#_):not(#__) input,
+#sns-global-menu:not(#_):not(#__) select,
+#sns-global-menu:not(#_):not(#__) textarea,
+#sns-global-menu:not(#_):not(#__) label {
+    font-family: 'Pretendard Variable', 'Pretendard JP Variable', 'Pretendard', 'Pretendard JP', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+}
+
 :root {
     --sns-text: #0f1419;
     --sns-bg: #ffffff;
@@ -18,23 +48,38 @@
     --sns-secondary: #aaaaaa;
 }
 
+.sns-theme-light {
+    --sns-text: #0f1419;
+    --sns-bg: #ffffff;
+    --sns-border: #cfd9de;
+    --sns-quote-bg: #f7f9f9;
+    --sns-modal-bg: rgba(255, 255, 255, 0.95);
+    --sns-secondary: #536471;
+}
+
 .sns-reaction-wrapper {
     /* Root Reset */
     all: initial;
     /* Re-apply safe defaults */
     display: block;
-    font-family: 'Pretendard', 'Pretendard JP', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
     text-align: left;
     color: inherit;
     box-sizing: border-box;
     width: 100%;
 }
 
-.sns-reaction-container>* {
-    font-family: 'Pretendard', 'Pretendard JP', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+/* Explicit span font sizes to prevent theme overrides without using inherit */
+.sns-reaction-wrapper span.sns-hashtag,
+.sns-reaction-wrapper span.sns-mention,
+.sns-reaction-wrapper span.sns-timestamp,
+.sns-reaction-wrapper span.sns-ig-mention {
+    font-size: 14px !important;
+}
 
+.sns-reaction-container>* {
+    /* Font family handled by high specificity lock above */
 }
 
 .sns-reaction-wrapper *,
@@ -225,9 +270,9 @@
 
 /* --- Twitter (X) Skin --- */
 .sns-skin-twitter {
-    background-color: #000;
-    color: #e7e9ea;
-    border: 1px solid #2f3336;
+    background-color: var(--sns-bg);
+    color: var(--sns-text);
+    border: 1px solid var(--sns-border);
     border-radius: 16px;
     padding: 12px 16px;
     margin-bottom: 12px;
@@ -254,7 +299,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 20px !important;
 }
 
 .sns-twitter-names {
@@ -263,19 +308,19 @@
 }
 
 .sns-twitter-displayname {
-    font-weight: 600;
-    font-size: 15px;
-    color: #e7e9ea;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    color: var(--sns-text);
 }
 
 .sns-twitter-username {
     color: #71767b;
-    font-size: 15px;
+    font-size: 15px !important;
 }
 
 .sns-twitter-content {
-    font-size: 15px;
-    line-height: 20px;
+    font-size: 15px !important;
+    line-height: 20px !important;
     margin-top: 8px;
     margin-bottom: 10px;
     white-space: pre-wrap;
@@ -293,7 +338,7 @@
 
 .sns-photo-placeholder {
     color: rgba(127, 127, 127, 0.7);
-    font-size: 14px;
+    font-size: 14px !important;
     font-style: italic;
 }
 
@@ -301,7 +346,7 @@
     display: flex;
     gap: 20px;
     color: #71767b;
-    font-size: 13px;
+    font-size: 13px !important;
     margin-top: 0px;
     padding-top: 8px;
 }
@@ -314,16 +359,29 @@
     transition: color 0.2s;
 }
 
+.sns-reply:hover .fa-comment,
+.sns-quote:hover .fa-quote-right {
+    color: #1d9bf0 !important;
+}
+
+.sns-stat-item.sns-retweet:hover .fa-retweet {
+    color: #00ba7c !important;
+}
+
+.sns-stat-item.sns-like:hover .fa-heart {
+    color: #f91880 !important;
+}
+
 .sns-stat-item:hover {
-    color: #1d9bf0;
+    color: #1d9bf0 !important;
 }
 
 .sns-stat-item.sns-like:hover {
-    color: #f91880;
+    color: #f91880 !important;
 }
 
 .sns-stat-item.sns-retweet:hover {
-    color: #00ba7c;
+    color: #00ba7c !important;
 }
 
 /* --- Twitter Quote RT Card --- */
@@ -354,7 +412,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
+    font-size: 10px !important;
     color: #536471;
 }
 
@@ -364,13 +422,13 @@
 }
 
 .sns-twitter-quote-name {
-    font-weight: 700;
-    font-size: 13px;
+    font-weight: 700 !important;
+    font-size: 13px !important;
 }
 
 .sns-twitter-quote-handle {
     color: #536471;
-    font-size: 13px;
+    font-size: 13px !important;
 }
 
 .sns-theme-dark .sns-twitter-quote-handle {
@@ -378,8 +436,8 @@
 }
 
 .sns-twitter-quote-content {
-    font-size: 14px;
-    line-height: 1.4;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
     margin-bottom: 4px;
 }
 
@@ -403,30 +461,22 @@
 }
 
 /* --- Instagram Skin --- */
-/* --- Instagram Skin --- */
 .sns-skin-instagram {
-    background-color: #ffffff;
+    background-color: var(--sns-bg);
     padding-bottom: 5px;
     /* Spacing fix */
-    color: #000000;
-    border: 1px solid #dbdbdb;
+    color: var(--sns-text);
+    border: 1px solid var(--sns-border);
     border-radius: 3px;
     margin-bottom: 20px;
-    font-size: 14px;
-    line-height: 18px;
+    font-size: 14px !important;
+    line-height: 18px !important;
 }
 
 .theme-dark .sns-skin-instagram {
     background-color: #000000;
     color: #f5f5f5;
     border-color: #262626;
-}
-
-/* Force Light Mode Overrides */
-.sns-theme-light .sns-skin-instagram {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-    border-color: #dbdbdb !important;
 }
 
 /* Header */
@@ -453,14 +503,14 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background-color: #fff;
+    background-color: var(--sns-bg);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    font-size: 18px;
-    color: #262626;
-    font-weight: 600;
+    font-size: 18px !important;
+    color: var(--sns-text);
+    font-weight: 600 !important;
 }
 
 .sns-theme-dark .sns-instagram-avatar-inner {
@@ -476,16 +526,16 @@
 }
 
 .sns-instagram-username {
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 18px;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    line-height: 18px !important;
     color: inherit;
 }
 
 .sns-instagram-location {
-    font-size: 12px;
-    line-height: 16px;
-    color: #262626;
+    font-size: 12px !important;
+    line-height: 16px !important;
+    color: var(--sns-secondary);
 }
 
 .theme-dark .sns-instagram-location {
@@ -493,7 +543,7 @@
 }
 
 .sns-instagram-more {
-    color: #262626;
+    color: var(--sns-text);
     margin-left: auto;
     cursor: pointer;
 }
@@ -524,18 +574,14 @@
     padding: 60px 40px;
     /* Improved padding */
     text-align: center;
-    font-size: 16px;
+    font-size: 16px !important;
     /* Reduced from 1.2em (~19px) */
-    line-height: 1.5;
-    color: #262626;
+    line-height: 1.5 !important;
+    color: var(--sns-text);
 }
 
 .theme-dark .sns-instagram-photo-content {
     color: #f5f5f5;
-}
-
-.sns-theme-light .sns-instagram-photo-content {
-    color: #262626 !important;
 }
 
 /* Actions */
@@ -560,7 +606,7 @@
 }
 
 .action-icon {
-    font-size: 24px;
+    font-size: 24px !important;
     cursor: pointer;
     transition: opacity 0.2s;
 }
@@ -571,22 +617,21 @@
 
 /* Content Info */
 .sns-instagram-likes {
-    font-weight: 600;
-    font-size: 14px;
+    font-weight: 600 !important;
+    font-size: 14px !important;
     margin: 10px 12px 8px 12px;
 }
 
 .sns-instagram-caption {
     margin: 0 12px 6px 12px;
-    font-size: 14px;
-    line-height: 18px;
+    font-size: 14px !important;
+    line-height: 18px !important;
 }
 
 .sns-instagram-caption-user {
-    font-weight: 600;
+    font-weight: 600 !important;
+    font-size: 14px !important;
     margin-right: 6px;
-    float: left;
-    /* Inline-block effect */
 }
 
 .sns-instagram-caption-text {
@@ -596,8 +641,8 @@
 
 .sns-instagram-view-comments {
     margin: 0 12px 4px 12px;
-    font-size: 14px;
-    color: #8e8e8e;
+    font-size: 14px !important;
+    color: var(--sns-secondary);
     cursor: pointer;
 }
 
@@ -607,9 +652,9 @@
 
 .sns-instagram-date {
     margin: 4px 12px 12px 12px;
-    font-size: 10px;
+    font-size: 10px !important;
     text-transform: uppercase;
-    color: #8e8e8e;
+    color: var(--sns-secondary);
     letter-spacing: 0.2px;
 }
 
@@ -625,7 +670,7 @@
 
 .sns-ig-comment {
     display: flex;
-    font-size: 14px;
+    font-size: 14px !important;
     margin-bottom: 12px;
     align-items: flex-start;
 }
@@ -638,7 +683,7 @@
 .sns-ig-comment.sub-comment .sns-ig-comment-avatar {
     width: 24px;
     height: 24px;
-    font-size: 10px;
+    font-size: 10px !important;
 }
 
 .sns-ig-comment-avatar {
@@ -651,9 +696,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+    font-size: 12px !important;
     color: #ffffff;
-    font-weight: 600;
+    font-weight: 600 !important;
 }
 
 .theme-dark .sns-ig-comment-avatar {
@@ -666,9 +711,9 @@
 }
 
 .sns-ig-comment-user {
-    font-weight: 600;
+    font-weight: 600 !important;
+    font-size: 14px !important;
     margin-right: 6px;
-    float: left;
 }
 
 .sns-ig-comment-text {
@@ -679,16 +724,16 @@
     display: flex;
     gap: 12px;
     margin-top: 4px;
-    font-size: 12px;
-    color: #8e8e8e;
-    font-weight: 600;
+    font-size: 12px !important;
+    color: var(--sns-secondary);
+    font-weight: 600 !important;
     clear: both;
 }
 
 /* @mention blue color */
 .sns-ig-mention {
     /* color: #0063c7; */
-    font-weight: 400;
+    font-weight: 400 !important;
 }
 
 .theme-dark .sns-ig-mention {
@@ -699,38 +744,14 @@
     color: #a8a8a8;
 }
 
-/* --- Light Mode Text Visibility Overrides --- */
-.sns-theme-light .sns-instagram-username,
-.sns-theme-light .sns-instagram-caption-user,
-.sns-theme-light .sns-instagram-caption-text,
-.sns-theme-light .sns-ig-comment-user,
-.sns-theme-light .sns-ig-comment-text,
-.sns-theme-light .sns-instagram-likes {
-    color: #262626 !important;
-}
-
-.sns-theme-light .sns-instagram-location,
-.sns-theme-light .sns-instagram-more,
-.sns-theme-light .sns-instagram-view-comments,
-.sns-theme-light .sns-instagram-date,
-.sns-theme-light .sns-ig-comment-time,
-.sns-theme-light .sns-ig-comment-reply,
-.sns-theme-light .sns-ig-comment-like,
-.sns-theme-light .sns-ig-comment-footer {
-    color: #8e8e8e !important;
-}
-
-.sns-theme-light .action-icon {
-    color: #262626 !important;
-}
-
 .sns-ig-comment-time,
 .sns-ig-comment-reply {
+    font-size: 12px !important;
     cursor: pointer;
 }
 
 .sns-ig-comment-like {
-    font-size: 12px;
+    font-size: 12px !important;
     color: #8e8e8e;
     margin-top: 8px;
     /* Align near top */
@@ -743,13 +764,13 @@
 
 /* --- YouTube Skin (Modern) --- */
 .sns-skin-youtube {
-    background-color: #0f0f0f;
-    /* Default semi-transparent dark */
+    background-color: var(--sns-bg);
     backdrop-filter: blur(5px);
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 24px;
-    border: 1px solid rgba(127, 127, 127, 0.1);
+    border: 1px solid var(--sns-border);
+    color: var(--sns-text);
 }
 
 .sns-theme-dark .sns-skin-youtube {
@@ -789,8 +810,8 @@
 
 .sns-youtube-video-description {
     color: rgba(255, 255, 255, 0.75);
-    font-size: 14px;
-    line-height: 1.6;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
     text-align: center;
     max-width: 90%;
 }
@@ -807,8 +828,8 @@
 .sns-yt-btn {
     background: transparent;
     border: none;
-    color: #fff;
-    font-size: 16px;
+    color: var(--sns-text);
+    font-size: 16px !important;
     padding: 4px 8px;
     cursor: pointer;
     opacity: 0.9;
@@ -820,9 +841,9 @@
 }
 
 .sns-yt-time {
-    color: #fff;
-    font-size: 12px;
-    font-weight: 500;
+    color: var(--sns-text);
+    font-size: 12px !important;
+    font-weight: 500 !important;
     min-width: 80px;
 }
 
@@ -852,8 +873,8 @@
 }
 
 .sns-yt-progress-handle {
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 40px;
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -885,7 +906,7 @@
     color: white;
     padding: 8px 12px;
     border-radius: 6px;
-    font-size: 12px;
+    font-size: 12px !important;
     text-align: center;
     opacity: 0;
     pointer-events: none;
@@ -907,17 +928,17 @@
 }
 
 .sns-yt-tooltip-label {
-    font-size: 10px;
+    font-size: 10px !important;
     color: #ff6b6b;
     margin-bottom: 4px;
-    font-weight: 600;
+    font-weight: 600 !important;
 }
 
 .sns-yt-tooltip-text {
-    font-size: 12px;
+    font-size: 12px !important;
     max-width: 200px;
     white-space: normal;
-    line-height: 1.4;
+    line-height: 1.4 !important;
     margin: 0 auto;
 }
 
@@ -960,7 +981,7 @@
 }
 
 .sns-yt-center-controls .sns-yt-btn {
-    font-size: 20px;
+    font-size: 20px !important;
     opacity: 0.7;
     transition: opacity 0.2s;
 }
@@ -975,7 +996,7 @@
 }
 
 .sns-yt-center-controls .sns-yt-play-main {
-    font-size: 40px;
+    font-size: 40px !important;
     opacity: 1;
     background: transparent;
     border-radius: 50%;
@@ -1032,15 +1053,15 @@
     align-items: center;
     padding: 8px 12px;
     color: rgba(255, 255, 255, 0.9);
-    font-weight: 500;
-    font-size: 13px;
+    font-weight: 500 !important;
+    font-size: 13px !important;
 }
 
 .sns-yt-modal-close {
     background: transparent;
     border: none;
     color: rgba(255, 255, 255, 0.7);
-    font-size: 20px;
+    font-size: 20px !important;
     cursor: pointer;
     transition: color 0.2s;
 }
@@ -1056,13 +1077,24 @@
 }
 
 .sns-yt-modal-body pre {
-    margin: 0;
     white-space: pre-wrap;
-    font-family: inherit;
-    font-size: 13px;
-    line-height: 1.7;
+
+    font-size: 13px !important;
+    line-height: 1.7 !important;
     color: rgba(255, 255, 255, 0.85);
     font-family: 'Pretendard', 'Pretendard JP', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+}
+
+.sns-yt-modal-body pre::before,
+.sns-yt-modal-body pre::after {
+    content: "" !important;
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 /* 2. Video Info */
@@ -1071,9 +1103,9 @@
 }
 
 .sns-youtube-video-title {
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 26px;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    line-height: 26px !important;
     color: var(--SmartThemeBodyColor);
     /* Multi-line clamp */
     display: -webkit-box;
@@ -1099,9 +1131,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    font-weight: 600;
-    font-size: 14px;
+    color: var(--sns-bg);
+    background-color: var(--sns-text);
+    font-weight: 600 !important;
+    font-size: 14px !important;
 }
 
 .sns-youtube-channel-text {
@@ -1112,12 +1145,12 @@
 }
 
 .sns-youtube-channel-text .channel-name {
-    font-weight: 600;
-    font-size: 15px;
+    font-weight: 600 !important;
+    font-size: 15px !important;
 }
 
 .sns-youtube-channel-text .sub-count {
-    font-size: 12px;
+    font-size: 12px !important;
     color: #aaaaaa !important;
 }
 
@@ -1130,7 +1163,7 @@
     color: var(--sns-modal-bg);
     /* Inverted for contrast approx */
     /* Usually Black button white text in light mode, White button black text in dark mode */
-    font-weight: 500;
+    font-weight: 500 !important;
     display: flex;
     align-items: center;
     border: none;
@@ -1144,8 +1177,8 @@
 }
 
 .sns-theme-light .sns-subscribe-btn {
-    background-color: #0f0f0f !important;
-    color: #fff !important;
+    background-color: var(--sns-text) !important;
+    color: var(--sns-bg) !important;
 }
 
 /* 3. Comments Section */
@@ -1153,8 +1186,8 @@
     display: flex;
     align-items: center;
     gap: 20px;
-    font-weight: 600;
-    font-size: 16px;
+    font-weight: 600 !important;
+    font-size: 16px !important;
     margin: 2px 4px 16px 4px;
 }
 
@@ -1177,13 +1210,13 @@
     border-radius: 50%;
     background-color: #777;
     /* Neutral Grey */
-    color: #fff;
+    color: #555;
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
-    font-weight: 500;
+    font-size: 18px !important;
+    font-weight: 500 !important;
 }
 
 .sns-youtube-body {
@@ -1194,25 +1227,21 @@
 }
 
 .sns-youtube-header {
-    font-size: 13px;
+    font-size: 13px !important;
     display: flex;
     align-items: baseline;
     gap: 4px;
 }
 
 .sns-youtube-username {
-    font-weight: 600;
-    font-size: 13px;
-    color: var(--SmartThemeBodyColor);
-}
-
-.sns-theme-dark .sns-youtube-username {
-    color: #ffffff !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    color: var(--sns-text);
 }
 
 .sns-youtube-time {
     color: #aaaaaa !important;
-    font-size: 12px;
+    font-size: 12px !important;
 }
 
 .theme-dark .sns-youtube-time {
@@ -1220,8 +1249,8 @@
 }
 
 .sns-youtube-text {
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 14px !important;
+    line-height: 20px !important;
     margin-top: 2px;
     color: var(--sns-text) !important;
 }
@@ -1237,17 +1266,17 @@
     align-items: center;
     gap: 16px;
     margin-top: 6px;
-    font-size: 12px;
+    font-size: 12px !important;
 }
 
 .sns-youtube-actions i {
-    font-size: 16px;
+    font-size: 16px !important;
     /* Icons slightly bigger */
     cursor: pointer;
 }
 
 .sns-youtube-actions span {
-    font-weight: 500;
+    font-weight: 500 !important;
     cursor: pointer;
 }
 
@@ -1270,11 +1299,11 @@
 .sns-youtube-comment.sub-comment .sns-youtube-avatar {
     width: 24px;
     height: 24px;
-    font-size: 12px;
+    font-size: 12px !important;
 }
 
 .sns-youtube-comment.sub-comment .sns-youtube-username {
-    font-size: 12px;
+    font-size: 12px !important;
 }
 
 
@@ -1285,9 +1314,8 @@
     align-items: center;
     gap: 16px;
     margin-top: 8px;
-    font-size: 14px;
-    color: #fff;
-    /* Default Dark Mode White */
+    font-size: 14px !important;
+    color: var(--sns-text);
 }
 
 .sns-youtube-actions i {
@@ -1295,8 +1323,8 @@
 }
 
 .sns-youtube-action-count {
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 12px !important;
+    font-weight: 500 !important;
 }
 
 /* Light Mode Override */
@@ -1309,28 +1337,24 @@
     padding-bottom: 0 !important;
 }
 
-/* --- YouTube Light Mode Overrides --- */
-.sns-theme-light .sns-skin-youtube {
-    background-color: #ffffff !important;
-    color: #0f0f0f !important;
-    border: 1px solid #e5e5e5 !important;
-}
-
-.sns-theme-light .sns-youtube-video-title,
-.sns-theme-light .sns-youtube-username,
-.sns-theme-light .sns-youtube-channel-text .channel-name,
-.sns-theme-light .sns-youtube-comments-header {
-    color: #0f0f0f !important;
-}
-
-.sns-theme-light .sns-youtube-time,
-.sns-theme-light .sns-youtube-channel-text .sub-count {
-    color: #959595 !important;
-}
-
 /* Force comment text to be black-ish for readability, not full grey */
 .sns-theme-light .sns-youtube-text {
     color: #222 !important;
+}
+
+/* --- YouTube Author Badge (작성자) --- */
+.sns-youtube-author-badge {
+    background-color: var(--greyShadeOverlay, rgba(255, 255, 255, 0.2)) !important;
+    color: var(--SmartThemeBodyColor, #fff) !important;
+    padding: 2px 8px !important;
+    border-radius: 12px !important;
+    font-size: 11px !important;
+    margin-left: 2px;
+}
+
+.sns-theme-light .sns-youtube-author-badge {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    color: #0f0f0f !important;
 }
 
 /* --- Modal Styles --- */
@@ -1358,7 +1382,7 @@
 
 .sns-modal {
     background-color: var(--sns-modal-bg);
-    border: 1px solid var(--SmartThemeBorderColor);
+    border: 1px solid var(--sns-border);
     border-radius: 16px;
     width: 90%;
     max-width: 500px;
@@ -1367,6 +1391,7 @@
     flex-direction: column;
     transform: translateY(20px);
     transition: transform 0.2s;
+    color: var(--sns-text);
 }
 
 .sns-modal-overlay.open .sns-modal {
@@ -1375,19 +1400,19 @@
 
 .sns-modal-header {
     padding: 16px;
-    border-bottom: 1px solid var(--SmartThemeBorderColor);
+    border-bottom: 1px solid var(--sns-border);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-weight: 600;
-    font-size: 18px;
+    font-weight: 600 !important;
+    font-size: 18px !important;
 }
 
 .sns-modal-close {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 20px !important;
     color: var(--sns-text);
     padding: 4px;
 }
@@ -1405,7 +1430,7 @@
     padding: 8px 16px;
     border-radius: 20px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 13px !important;
     transition: all 0.2s;
     display: inline-flex;
     align-items: center;
@@ -1443,18 +1468,18 @@
 }
 
 .sns-header-title {
-    font-weight: 600;
-    font-size: 0.9em;
+    font-weight: 600 !important;
+    font-size: 0.9em !important;
     display: flex;
     align-items: center;
     gap: 10px;
-    color: var(--sns-text);
+    color: var(--SmartThemeBodyColor, var(--sns-text));
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .sns-chevron {
-    font-size: 0.8em;
+    font-size: 0.8em !important;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -1469,10 +1494,10 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--sns-text);
+    color: var(--SmartThemeBodyColor, var(--sns-text));
     opacity: 0.5;
     transition: all 0.2s;
-    font-size: 0.95em;
+    font-size: 0.95em !important;
     padding: 4px;
 }
 
@@ -1547,7 +1572,7 @@
     margin-left: 10px;
     /* Indent from main post */
     border-radius: 0 8px 8px 0;
-    font-size: 0.9em;
+    font-size: 0.9em !important;
 }
 
 /* Fix Text color inside Dark Skins (Twitter) */
@@ -1564,7 +1589,7 @@
     margin-bottom: 4px;
     color: var(--grey50);
     /* Subtler header */
-    font-size: 0.85em;
+    font-size: 0.85em !important;
 }
 
 .sns-sub-header.quote-header {
@@ -1573,12 +1598,13 @@
 
 .sns-sub-handle {
     opacity: 0.6;
-    font-weight: 400;
+    font-weight: 400 !important;
+    font-size: 13px !important;
 }
 
 .sns-sub-body {
     color: var(--sns-text);
-    line-height: 1.4;
+    line-height: 1.4 !important;
 }
 
 /* Generate Button Polish */
@@ -1610,12 +1636,13 @@
 }
 
 .sns-stat-item.interactive:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    /* background-color: rgba(255, 255, 255, 0.1); */
 }
 
-.sns-stat-item.active-toggle {
-    color: var(--sns-accent);
-    background-color: rgba(255, 255, 255, 0.15);
+.sns-stat-item.active-toggle,
+.sns-stat-item.active-toggle i {
+    color: var(--sns-accent) !important;
+    /* background-color: rgba(255, 255, 255, 0.15); */
 }
 
 /* --- Theme Overrides --- */
@@ -1639,7 +1666,7 @@
 /* Force Light Mode */
 .sns-theme-light .sns-skin-twitter {
     background-color: #ffffff !important;
-    color: #0f1419 !important;
+    color: #222222 !important;
     border-color: #cfd9de !important;
 }
 
@@ -1651,7 +1678,7 @@
 }
 
 .sns-theme-light .sns-sub-body {
-    color: #0f1419 !important;
+    color: #222222 !important;
 }
 
 .sns-theme-light .sns-twitter-username,
@@ -1660,7 +1687,7 @@
 }
 
 .sns-theme-light .sns-twitter-displayname {
-    color: #0f1419 !important;
+    color: #222222 !important;
 }
 
 
@@ -1674,7 +1701,7 @@
 .sns-youtube-avatar.small {
     background-color: #aa66cc;
     /* Random color for replies */
-    font-size: 10px;
+    font-size: 10px !important;
 }
 
 .sns-youtube-comment.sub-comment {
@@ -1697,7 +1724,7 @@
     /* Increased padding */
     border-radius: 4px;
     transition: all 0.2s;
-    font-size: 13px;
+    font-size: 13px !important;
     opacity: 0.6;
     display: flex;
     align-items: center;
@@ -1724,12 +1751,12 @@
 }
 
 .sns-page-indicator {
-    font-size: 11px;
+    font-size: 11px !important;
     opacity: 0.9;
     background: rgba(127, 127, 127, 0.2);
     padding: 1px 6px;
     border-radius: 10px;
-    font-weight: 600;
+    font-weight: 600 !important;
     min-width: 24px;
     text-align: center;
 }
@@ -1763,7 +1790,7 @@
     color: inherit;
     border: 1px solid rgba(127, 127, 127, 0.3);
     padding: 10px;
-    font-size: 13px;
+    font-size: 13px !important;
     resize: vertical;
     border-radius: 8px;
 }
@@ -1826,7 +1853,7 @@
 .sns-theme-light .sns-edit-btn:not(.save) {
     background: rgba(0, 0, 0, 0.05) !important;
     border-color: rgba(0, 0, 0, 0.15) !important;
-    color: #0f1419 !important;
+    color: #222222 !important;
 }
 
 .sns-theme-light .sns-edit-btn:not(.save):hover {
@@ -1953,8 +1980,8 @@
     overflow: hidden;
     /* Fix border radius with children */
     /* Default Fallback (Dark Solid) if no theme class */
-    background: #15181c !important;
-    border: 1px solid #2f3336 !important;
+    background: #1a1a1a !important;
+    border: 1px solid #383838 !important;
     color: #e7e9ea !important;
 }
 
@@ -1972,7 +1999,7 @@
 #sns-global-menu.sns-theme-light {
     background: #ffffff !important;
     border: 1px solid #d9d9d9 !important;
-    color: #0f1419 !important;
+    color: #222222 !important;
 }
 
 .sns-theme-light .sns-menu-section,
@@ -1994,7 +2021,7 @@
 #sns-global-menu.sns-theme-light .sns-menu-select {
     background: #ffffff !important;
     border: 1px solid #cfd9de !important;
-    color: #0f1419 !important;
+    color: #222222 !important;
 }
 
 .sns-theme-light .sns-menu-section {
@@ -2009,18 +2036,18 @@
 
 /* Dark Theme Menu Override */
 .sns-theme-dark .sns-menu-dropdown {
-    background: #15181c !important;
-    border: 1px solid #2f3336 !important;
+    background: #1d1d1d !important;
+    border: 1px solid #333333 !important;
     color: #e7e9ea !important;
 }
 
 .sns-theme-dark .sns-menu-section {
-    border-bottom: 1px solid #2f3336 !important;
+    border-bottom: 1px solid #333333 !important;
 }
 
 .sns-theme-dark .sns-menu-item:hover,
 .sns-theme-dark .sns-radio-option:hover {
-    background: #1e2124 !important;
+    background: #1f1f1f !important;
 }
 
 .sns-menu-dropdown.open {
@@ -2038,10 +2065,10 @@
 }
 
 .sns-menu-label {
-    font-size: 11px;
+    font-size: 11px !important;
     opacity: 0.7;
     margin-bottom: 6px;
-    font-weight: 600;
+    font-weight: 600 !important;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -2053,7 +2080,7 @@
     padding: 8px 12px;
     cursor: pointer;
     transition: background 0.2s;
-    font-size: 13px;
+    font-size: 13px !important;
     color: inherit;
     width: 100%;
     text-align: left;
@@ -2067,6 +2094,10 @@
 
 .sns-menu-item.danger {
     color: #ff4444;
+}
+
+.sns-menu-item.danger i {
+    color: inherit !important;
 }
 
 .sns-menu-item.danger:hover {
@@ -2083,38 +2114,68 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 13px;
+    font-size: 13px !important;
     padding: 4px 5px;
     cursor: pointer;
     opacity: 0.8;
+}
+
+.sns-radio-option i {
+    opacity: 1;
+    /* Normalize the base icon opacity */
+    color: inherit !important;
+    /* Ensure they all inherit the same color initially */
 }
 
 .sns-radio-option:hover {
     opacity: 1;
 }
 
-.sns-radio-option.active {
+.sns-radio-option.active,
+.sns-radio-option.active i {
     opacity: 1;
     color: #1d9bf0;
-    font-weight: 600;
+    font-weight: 600 !important;
+}
+
+.sns-radio-option.instagram.active,
+.sns-radio-option.instagram.active i {
+    color: #E12F6C !important;
 }
 
 .sns-radio-option.instagram.active {
-    color: #E12F6C !important;
     border-color: #E12F6C !important;
-    background-color: rgba(225, 48, 108, 0.1);
+    /* background-color: rgba(225, 48, 108, 0.1); */
+}
+
+.sns-radio-option.youtube.active,
+.sns-radio-option.youtube.active i {
+    color: #FF0000 !important;
 }
 
 .sns-radio-option.youtube.active {
-    color: #FF0000 !important;
     border-color: #FF0000 !important;
-    background-color: rgba(255, 0, 0, 0.1);
+    /* background-color: rgba(255, 0, 0, 0.1); */
+}
+
+.sns-radio-option.everytime.active,
+.sns-radio-option.everytime.active i {
+    color: #c62917 !important;
 }
 
 .sns-radio-option.everytime.active {
-    color: #c62917 !important;
     border-color: #c62917 !important;
-    background-color: rgba(198, 41, 23, 0.1);
+    /* background-color: rgba(198, 41, 23, 0.1); */
+}
+
+.sns-radio-option.messenger.active,
+.sns-radio-option.messenger.active i {
+    color: #e5cd00 !important;
+}
+
+.sns-radio-option.messenger.active {
+    border-color: #e5cd00 !important;
+    /* background-color: rgba(229, 205, 0, 0.15); */
 }
 
 /* Menu Inputs */
@@ -2125,7 +2186,7 @@
     border-radius: 4px;
     color: inherit;
     padding: 2px 4px;
-    font-size: 13px;
+    font-size: 13px !important;
     text-align: right;
 }
 
@@ -2136,7 +2197,7 @@
     border-radius: 4px;
     color: inherit;
     padding: 2px 4px;
-    font-size: 13px;
+    font-size: 13px !important;
     cursor: pointer;
 }
 
@@ -2189,9 +2250,10 @@
     flex-direction: column;
     gap: 10px;
     padding: 12px;
-    border: 1px dashed var(--sns-border);
+    border: 1px solid var(--sns-border);
     border-radius: 12px;
-    background: rgba(127, 127, 127, 0.05);
+    background-color: var(--sns-bg);
+    color: var(--sns-text);
     max-width: 400px;
     margin: 12px auto;
 }
@@ -2215,7 +2277,7 @@
     cursor: pointer;
     padding: 6px 10px;
     border-radius: 6px;
-    font-size: 16px;
+    font-size: 16px !important;
     opacity: 0.5;
     transition: all 0.2s;
 }
@@ -2263,7 +2325,7 @@
 }
 
 .sns-start-count label {
-    font-size: 13px;
+    font-size: 13px !important;
     opacity: 0.8;
 }
 
@@ -2274,7 +2336,7 @@
     border-radius: 4px;
     color: inherit;
     padding: 4px 6px;
-    font-size: 13px;
+    font-size: 13px !important;
     text-align: center;
 }
 
@@ -2285,7 +2347,7 @@
     border-radius: 4px;
     color: inherit;
     padding: 4px 8px;
-    font-size: 13px;
+    font-size: 13px !important;
     cursor: pointer;
 }
 
@@ -2339,7 +2401,7 @@ select.sns-start-preset-select option {
     justify-content: center;
     gap: 8px;
     color: #fff;
-    font-size: 14px;
+    font-size: 14px !important;
     border-radius: 8px;
     z-index: 10;
 }
@@ -2401,11 +2463,19 @@ select.sns-start-preset-select option {
 }
 
 .sns-media-placeholder {
-    color: var(--grey70);
-    font-size: 13px;
+    color: var(--grey30);
+    font-size: 13px !important;
     text-align: center;
     padding: 12px;
-    line-height: 1.4;
+    line-height: 1.4 !important;
+}
+
+.sns-theme-dark .sns-media-placeholder {
+    color: var(--grey70);
+}
+
+.sns-theme-dark .sns-messenger-right .sns-media-placeholder {
+    color: var(--grey30);
 }
 
 .sns-twitter-media-grid.single .sns-media-placeholder {
@@ -2414,8 +2484,8 @@ select.sns-start-preset-select option {
 }
 
 .sns-twitter-media-grid:not(.single) .sns-media-placeholder {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 14px !important;
+    font-weight: 600 !important;
     color: var(--sns-text);
 }
 
@@ -2424,7 +2494,7 @@ select.sns-start-preset-select option {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 24px;
+    font-size: 24px !important;
     color: white;
     background: rgba(0, 0, 0, 0.5);
     padding: 10px 12px;
@@ -2449,8 +2519,8 @@ select.sns-start-preset-select option {
 
 .sns-media-modal-content {
     color: var(--SmartThemeBodyColor);
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
     padding-right: 24px;
 }
 
@@ -2460,7 +2530,7 @@ select.sns-start-preset-select option {
     right: 8px;
     background: none;
     border: none;
-    font-size: 18px;
+    font-size: 18px !important;
     cursor: pointer;
     color: var(--grey70);
     padding: 0;
@@ -2521,7 +2591,7 @@ select.sns-start-preset-select option {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    font-size: 16px !important;
 }
 
 .sns-instagram-user-info {
@@ -2533,12 +2603,12 @@ select.sns-start-preset-select option {
 
 .sns-instagram-username {
     font-weight: 600 !important;
-    font-size: 14px;
+    font-size: 14px !important;
     color: var(--sns-text);
 }
 
 .sns-instagram-location {
-    font-size: 12px;
+    font-size: 12px !important;
     color: var(--grey70);
 }
 
@@ -2554,10 +2624,10 @@ select.sns-start-preset-select option {
 
 .sns-instagram-photo-placeholder {
     color: var(--grey70);
-    font-size: 14px;
+    font-size: 14px !important;
     text-align: center;
     padding: 24px;
-    line-height: 1.6;
+    line-height: 1.6 !important;
     font-style: italic;
 }
 
@@ -2571,7 +2641,7 @@ select.sns-start-preset-select option {
 .sns-instagram-actions i {
     cursor: pointer;
     transition: all 0.2s ease;
-    font-size: 22px;
+    font-size: 22px !important;
     color: var(--sns-text);
 }
 
@@ -2587,14 +2657,14 @@ select.sns-start-preset-select option {
 .sns-instagram-likes {
     padding: 0 14px 8px;
     font-weight: 600 !important;
-    font-size: 14px;
+    font-size: 14px !important;
     color: var(--sns-text);
 }
 
 .sns-instagram-caption {
     padding: 0 14px 12px;
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
 }
 
 .sns-instagram-caption-user {
@@ -2611,7 +2681,7 @@ select.sns-start-preset-select option {
 .sns-instagram-view-comments {
     padding: 4px 14px 14px;
     color: var(--grey70);
-    font-size: 13px;
+    font-size: 13px !important;
     cursor: pointer;
     transition: color 0.2s;
 }
@@ -2634,7 +2704,7 @@ select.sns-start-preset-select option {
 
 .sns-ig-comment {
     padding: 8px 10px;
-    font-size: 14px;
+    font-size: 14px !important;
     display: flex;
     align-items: flex-start;
     gap: 4px;
@@ -2686,8 +2756,8 @@ select.sns-start-preset-select option {
 }
 
 .sns-twitter-media-item .sns-media-placeholder {
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 14px !important;
+    font-weight: bold !important;
     color: #fff;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     background-color: rgba(0, 0, 0, 0.5);
@@ -2700,7 +2770,7 @@ select.sns-start-preset-select option {
 }
 
 .sns-twitter-media-item .sns-media-icon {
-    font-size: 32px;
+    font-size: 32px !important;
     color: #fff;
     margin-bottom: 8px;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
@@ -2754,9 +2824,9 @@ select.sns-start-preset-select option {
 }
 
 .sns-media-modal-content {
-    font-size: 14px;
+    font-size: 14px !important;
     color: var(--sns-text);
-    line-height: 1.4;
+    line-height: 1.4 !important;
     white-space: pre-wrap;
 }
 
@@ -2764,7 +2834,7 @@ select.sns-start-preset-select option {
     background: none;
     border: none;
     color: var(--sns-text);
-    font-size: 18px;
+    font-size: 18px !important;
     cursor: pointer;
     opacity: 0.6;
     padding: 0 0 0 10px;
@@ -2794,7 +2864,7 @@ select.sns-start-preset-select option {
     align-items: center;
     gap: 6px;
     padding: 8px 12px 4px;
-    font-size: 13px;
+    font-size: 13px !important;
 }
 
 .sns-twitter-quote-avatar-small {
@@ -2805,12 +2875,12 @@ select.sns-start-preset-select option {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
+    font-size: 10px !important;
     color: var(--grey70);
 }
 
 .sns-twitter-quote-name {
-    font-weight: 600;
+    font-weight: 600 !important;
     color: var(--sns-text);
     white-space: nowrap;
     overflow: hidden;
@@ -2827,9 +2897,9 @@ select.sns-start-preset-select option {
 
 .sns-twitter-quote-content {
     padding: 4px 12px 6px;
-    font-size: 14px;
+    font-size: 14px !important;
     color: var(--sns-text);
-    line-height: 1.4;
+    line-height: 1.4 !important;
     word-break: break-word;
 }
 
@@ -2854,7 +2924,7 @@ select.sns-start-preset-select option {
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-size: 48px;
+    font-size: 48px !important;
     margin-bottom: 4px;
 }
 
@@ -2863,11 +2933,11 @@ select.sns-start-preset-select option {
 }
 
 .sns-youtube-video-title {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 18px !important;
+    font-weight: 600 !important;
     color: var(--sns-text);
     margin-bottom: 15px;
-    line-height: 1.3;
+    line-height: 1.3 !important;
 }
 
 .sns-youtube-channel-info {
@@ -2886,8 +2956,8 @@ select.sns-start-preset-select option {
     align-items: center;
     justify-content: center;
     color: white;
-    font-weight: 600;
-    font-size: 14px;
+    font-weight: 600 !important;
+    font-size: 14px !important;
 }
 
 .sns-youtube-channel-text {
@@ -2897,13 +2967,13 @@ select.sns-start-preset-select option {
 }
 
 .sns-youtube-channel-text .channel-name {
-    font-weight: 600;
-    font-size: 15px;
+    font-weight: 600 !important;
+    font-size: 15px !important;
     color: var(--sns-text);
 }
 
 .sns-youtube-channel-text .sub-count {
-    font-size: 12px;
+    font-size: 12px !important;
     color: var(--grey70);
 }
 
@@ -2914,7 +2984,7 @@ select.sns-start-preset-select option {
     border-radius: 18px;
     padding: 6px 14px;
     font-size: 13px !important;
-    font-weight: 600;
+    font-weight: 600 !important;
     cursor: pointer;
 }
 
@@ -2927,8 +2997,8 @@ select.sns-start-preset-select option {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-weight: 600;
-    font-size: 16px;
+    font-weight: 600 !important;
+    font-size: 16px !important;
     margin-bottom: 8px;
     padding: 0 4px;
 }
@@ -3059,8 +3129,8 @@ select.sns-start-preset-select option {
     color: white;
     padding: 8px 16px;
     border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 13px !important;
+    font-weight: 600 !important;
     cursor: pointer;
     z-index: 20;
     pointer-events: auto;
@@ -3144,7 +3214,11 @@ select.sns-start-preset-select option {
     justify-content: center;
     transition: all 0.2s;
     opacity: 0.8;
-    font-size: 16px;
+    font-size: 16px !important;
+}
+
+.sns-nav-btn i {
+    color: inherit !important;
 }
 
 .sns-nav-btn:hover {
@@ -3174,7 +3248,7 @@ select.sns-start-preset-select option {
         transform: none;
         width: 28px;
         height: 28px;
-        font-size: 12px;
+        font-size: 12px !important;
         background: rgba(127, 127, 127, 0.2);
         border: 1px solid rgba(127, 127, 127, 0.3);
         opacity: 0.8;
@@ -3230,7 +3304,7 @@ select.sns-start-preset-select option {
     justify-content: center;
     margin-right: 12px;
     border: 1px solid #eee;
-    font-size: 20px;
+    font-size: 20px !important;
 }
 
 .sns-everytime-info {
@@ -3239,28 +3313,28 @@ select.sns-start-preset-select option {
 }
 
 .sns-everytime-author {
-    font-weight: 600;
-    font-size: 15px;
+    font-weight: 600 !important;
+    font-size: 15px !important;
     color: #292929;
 }
 
 .sns-everytime-time {
-    font-size: 12px;
+    font-size: 12px !important;
     color: #a6a6a6;
     margin-top: 2px;
 }
 
 .sns-everytime-title {
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 20px !important;
+    font-weight: 600 !important;
     margin-bottom: 12px;
-    line-height: 1.4;
+    line-height: 1.4 !important;
     color: #292929;
 }
 
 .sns-everytime-content {
-    font-size: 15px;
-    line-height: 1.6;
+    font-size: 15px !important;
+    line-height: 1.6 !important;
     margin-bottom: 16px;
     white-space: pre-wrap;
     word-break: break-word;
@@ -3269,10 +3343,10 @@ select.sns-start-preset-select option {
 .sns-everytime-stats {
     display: flex;
     gap: 15px;
-    font-size: 13px;
+    font-size: 13px !important;
     color: #a6a6a6;
     margin-bottom: 16px;
-    font-weight: 500;
+    font-weight: 500 !important;
 }
 
 .sns-everytime-stats span {
@@ -3281,16 +3355,19 @@ select.sns-start-preset-select option {
     gap: 6px;
 }
 
-.sns-et-red {
-    color: #f91f15;
+.sns-et-red,
+.sns-et-red i {
+    color: #f91f15 !important;
 }
 
-.sns-et-blue {
-    color: #0ca5af;
+.sns-et-blue,
+.sns-et-blue i {
+    color: #0ca5af !important;
 }
 
-.sns-et-yellow {
-    color: #ffc107;
+.sns-et-yellow,
+.sns-et-yellow i {
+    color: #ffc107 !important;
 }
 
 /* Everytime Comments */
@@ -3389,8 +3466,8 @@ select.sns-start-preset-select option {
 }
 
 .sns-everytime-comment-author {
-    font-weight: 600;
-    font-size: 13px;
+    font-weight: 600 !important;
+    font-size: 13px !important;
     color: #444;
 }
 
@@ -3400,14 +3477,14 @@ select.sns-start-preset-select option {
 }
 
 .sns-everytime-comment-text {
-    font-size: 15px;
-    line-height: 1.5;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
     margin: 6px 0;
     color: #222;
 }
 
 .sns-everytime-comment-time {
-    font-size: 13px;
+    font-size: 13px !important;
     color: #959595;
 }
 
@@ -3470,24 +3547,39 @@ select.sns-start-preset-select option {
 }
 
 .sns-theme-dark .sns-everytime-comment-text {
-    color: #ddd;
+    color: #ddd !important;
 }
 
-/* Everytime Carousel Fixes */
-.sns-carousel-wrapper .sns-skin-everytime {
+/* Everytime & Messenger Carousel Fixes */
+.sns-carousel-wrapper .sns-skin-everytime,
+.sns-carousel-wrapper .sns-skin-messenger {
     flex: 0 0 85%;
     width: 85%;
     scroll-snap-align: center;
-    max-height: 650px;
-    overflow-y: auto;
     border-radius: 8px;
+    margin-bottom: 0;
 }
 
-.sns-carousel-wrapper .sns-skin-everytime:first-child {
+.sns-carousel-wrapper .sns-skin-everytime {
+    max-height: 650px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.sns-carousel-wrapper .sns-skin-messenger {
+    height: 600px;
+    /* Fixed height for consistent look */
+    display: flex;
+    flex-direction: column;
+}
+
+.sns-carousel-wrapper .sns-skin-everytime:first-child,
+.sns-carousel-wrapper .sns-skin-messenger:first-child {
     margin-left: calc((100% - 85%) / 2);
 }
 
-.sns-carousel-wrapper .sns-skin-everytime:last-child {
+.sns-carousel-wrapper .sns-skin-everytime:last-child,
+.sns-carousel-wrapper .sns-skin-messenger:last-child {
     margin-right: calc((100% - 85%) / 2);
 }
 
@@ -3495,6 +3587,7 @@ select.sns-start-preset-select option {
 
     .sns-carousel-wrapper>div,
     .sns-carousel-wrapper .sns-skin-everytime,
+    .sns-carousel-wrapper .sns-skin-messenger,
     .sns-carousel-wrapper .sns-skin-instagram {
         flex: 0 0 96%;
         width: 96%;
@@ -3509,7 +3602,8 @@ select.sns-start-preset-select option {
     }
 }
 
-.sns-carousel-wrapper .sns-skin-everytime::-webkit-scrollbar {
+.sns-carousel-wrapper .sns-skin-everytime::-webkit-scrollbar,
+.sns-carousel-wrapper .sns-skin-messenger::-webkit-scrollbar {
     width: 0 !important;
     display: none !important;
 }
@@ -3537,14 +3631,14 @@ select.sns-start-preset-select option {
 .sns-theme-dark .sns-start-config input.sns-start-count-input,
 .sns-theme-dark .sns-start-config textarea.sns-start-instruction-input,
 .sns-theme-dark .sns-start-config select.sns-start-preset-select {
-    background: #202124 !important;
+    background: #232323 !important;
     color: #eeeeee !important;
     border: 1px solid #5f6368 !important;
 }
 
 #sns-global-menu.sns-theme-dark .sns-menu-select option,
 .sns-theme-dark .sns-start-config select.sns-start-preset-select option {
-    background: #202124 !important;
+    background: #232323 !important;
     color: #eeeeee !important;
 }
 
@@ -3555,7 +3649,7 @@ select.sns-start-preset-select option {
 .sns-theme-dark .sns-page-indicator,
 .sns-theme-dark .sns-chevron,
 .sns-theme-dark .sns-icon-brand {
-    color: #e5e5e5 !important;
+    color: var(--SmartThemeBodyColor, #e5e5e5) !important;
 }
 
 /* --- Fix Video Icon Overlap in Twitter Media (FIXED) --- */
@@ -3569,7 +3663,7 @@ select.sns-start-preset-select option {
 .sns-media-icon {
     position: static !important;
     transform: none !important;
-    margin-bottom: 12px !important;
+    /* margin-bottom: 12px !important; */
     background: transparent !important;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
     font-size: 32px !important;
@@ -3629,14 +3723,14 @@ select.sns-start-preset-select option {
 .sns-instagram-media-placeholder {
     margin-bottom: 16px;
     opacity: 0.5;
-    font-size: 3rem;
+    font-size: 3rem !important;
     color: inherit;
 }
 
 .sns-instagram-media-desc {
     width: 90%;
-    font-size: 14px;
-    line-height: 1.4;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
     text-align: center;
     padding: 8px 12px;
     background: rgba(255, 255, 255, 0.85);
@@ -3653,7 +3747,7 @@ select.sns-start-preset-select option {
 .sns-ig-text-p {
     color: var(--sns-text);
     word-break: break-word;
-    line-height: 1.4;
+    line-height: 1.4 !important;
     margin: 0;
 }
 
@@ -3692,4 +3786,495 @@ select.sns-start-preset-select option {
 
 #chat .last_mes .sns-injection-point {
     margin-bottom: 50px;
+}
+
+
+/* --- Messenger Skin (Neutral Chat UI) --- */
+.sns-skin-messenger {
+    background-color: var(--sns-quote-bg);
+    color: var(--sns-text);
+    border: 1px solid var(--sns-border);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    /* Height is managed by carousel wrapper override if in carousel, otherwise flexible */
+}
+
+.sns-theme-dark .sns-skin-messenger {
+    background-color: #1a1d21;
+    color: #e4e6eb;
+    border-color: #3e4042;
+}
+
+/* Header */
+.sns-messenger-header {
+    background-color: var(--sns-bg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    font-size: 16px !important;
+}
+
+.sns-theme-dark .sns-messenger-header {
+    background-color: #242526;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sns-messenger-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+}
+
+.sns-messenger-header-left i {
+    cursor: pointer;
+    color: #65676b;
+}
+
+.sns-theme-dark .sns-messenger-header-left i {
+    color: #b0b3b8;
+}
+
+.sns-messenger-room-name {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+}
+
+.sns-messenger-member-count {
+    color: var(--sns-secondary);
+    font-weight: 400 !important;
+    font-size: 14px !important;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+.sns-theme-dark .sns-messenger-member-count {
+    color: #b0b3b8;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sns-messenger-header-right {
+    cursor: pointer;
+    color: #65676b;
+}
+
+.sns-theme-dark .sns-messenger-header-right {
+    color: #b0b3b8;
+}
+
+.sns-messenger-members {
+    display: none;
+}
+
+.sns-messenger-members-info {
+    padding: 8px 16px;
+    font-size: 12px !important;
+    color: var(--sns-secondary);
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.sns-theme-dark .sns-messenger-members-info {
+    color: #b0b3b8;
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Body / Messages Area */
+.sns-messenger-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.sns-messenger-empty {
+    text-align: center;
+    color: #888;
+    padding: 20px 0;
+    font-style: italic;
+    margin: auto 0;
+    font-size: 14px !important;
+}
+
+/* Rows & Bubbles */
+.sns-messenger-row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.sns-messenger-row.sns-messenger-left {
+    justify-content: flex-start;
+}
+
+.sns-messenger-row.sns-messenger-right {
+    justify-content: flex-end;
+}
+
+.sns-messenger-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #ddd;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold !important;
+    color: #555;
+    font-size: 14px !important;
+}
+
+.sns-messenger-bubble-group {
+    display: flex;
+    flex-direction: column;
+    max-width: 75%;
+}
+
+.sns-messenger-row.sns-messenger-right .sns-messenger-bubble-group {
+    align-items: flex-end;
+}
+
+.sns-messenger-name {
+    font-size: 12px !important;
+    color: var(--sns-secondary);
+    margin-bottom: 4px;
+    margin-left: 4px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.sns-messenger-row.sns-messenger-right .sns-messenger-name {
+    margin-left: 0;
+    margin-right: 4px;
+}
+
+.sns-theme-dark .sns-messenger-name {
+    color: #b0b3b8;
+}
+
+.sns-messenger-message-wrap {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+/* Opponent Bubble (Left) - White */
+.sns-messenger-row.sns-messenger-left .sns-messenger-bubble {
+    background-color: var(--sns-bg);
+    color: var(--sns-text);
+    padding: 8px 12px;
+    border-radius: 18px;
+    border-top-left-radius: 4px;
+    /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); */
+    word-break: break-word;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+}
+
+.sns-theme-dark .sns-messenger-row.sns-messenger-left .sns-messenger-bubble {
+    background-color: #3e4042;
+    color: #e4e6eb;
+    /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); */
+}
+
+/* My Bubble (Right) - Blue (Neutral) or Kakao Yellow */
+.sns-messenger-row.sns-messenger-right .sns-messenger-bubble {
+    background-color: #FEE500;
+    color: #191919;
+    padding: 8px 12px;
+    border-radius: 18px;
+    border-top-right-radius: 4px;
+    /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); */
+    word-break: break-word;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+}
+
+/* For Dark mode, we can keep the blue or adjust */
+.sns-theme-dark .sns-messenger-row.sns-messenger-right .sns-messenger-bubble {
+    background-color: #FEE500;
+    color: #191919;
+}
+
+/* Messenger Media Items */
+.sns-messenger-media-item {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    /* gap: 8px; */
+    margin-bottom: 2px;
+}
+
+.sns-theme-dark .sns-messenger-media-item {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.sns-messenger-row.sns-messenger-right .sns-messenger-media-item {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+.sns-messenger-media-item .sns-media-placeholder {
+    font-size: 13px !important;
+    opacity: 0.9;
+    word-break: keep-all;
+}
+
+.sns-messenger-media-item .sns-media-icon {
+    font-size: 14px !important;
+    opacity: 0.8;
+}
+
+.sns-messenger-time {
+    font-size: 11px !important;
+    color: #8c939d;
+    white-space: nowrap;
+}
+
+.sns-theme-dark .sns-messenger-time {
+    color: #8c939d;
+}
+
+/* Start Platform Button Icon Colors */
+.sns-start-platform-btn.active i {
+    opacity: 1;
+}
+
+.sns-start-platform-btn.twitter.active i {
+    color: #1d9bf0 !important;
+}
+
+.sns-start-platform-btn.twitter.active {
+    border-color: #1d9bf0 !important;
+}
+
+.sns-start-platform-btn.instagram.active i {
+    color: #E12F6C !important;
+}
+
+.sns-start-platform-btn.instagram.active {
+    border-color: #E12F6C !important;
+}
+
+.sns-start-platform-btn.youtube.active i {
+    color: #FF0000 !important;
+}
+
+.sns-start-platform-btn.youtube.active {
+    border-color: #FF0000 !important;
+}
+
+.sns-start-platform-btn.everytime.active i {
+    color: #c62917 !important;
+}
+
+.sns-start-platform-btn.everytime.active {
+    border-color: #c62917 !important;
+}
+
+/* Messenger Button Theme */
+.sns-start-platform-btn.messenger.active i {
+    color: #e5cd00 !important;
+}
+
+.sns-start-platform-btn.messenger.active {
+    border-color: #e5cd00 !important;
+    background-color: rgba(229, 205, 0, 0.15);
+}
+
+/* Messenger Settings Menu Tab */
+.sns-platform-tab[data-platform="messenger"]:not(.menu_button_checked) {
+    background: transparent !important;
+}
+
+.sns-platform-tab.menu_button_checked[data-platform="messenger"] {
+    border-color: #e5cd00 !important;
+    color: #e5cd00 !important;
+    background: rgba(229, 205, 0, 0.1) !important;
+}
+
+#sns_settings_content .sns-platform-tab.menu_button_checked[data-platform="messenger"] i,
+#sns_settings_content .sns-platform-tab.menu_button_checked[data-platform="messenger"] span {
+    color: #e5cd00 !important;
+}
+
+/* Fix for Settings Menu Tabs Overflow */
+#sns-settings-container .sns-platform-tab {
+    flex: 1 1 auto;
+    min-width: 80px;
+    padding: 5px;
+    font-size: 13px !important;
+    white-space: nowrap;
+}
+
+/* --- Loading UI Overlay --- */
+.sns-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 8px;
+}
+
+.sns-loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    background-color: var(--sns-bg);
+    border: 1px solid var(--sns-border);
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(100%);
+}
+
+.sns-theme-light .sns-loading-content {
+    background-color: #ffffff !important;
+    border-color: #d9d9d9 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+.sns-theme-dark .sns-loading-content {
+    background-color: #1a1a1a !important;
+    border-color: #333333 !important;
+}
+
+.sns-loading-spinner {
+    font-size: 32px !important;
+    color: var(--sns-text);
+}
+
+.sns-theme-light .sns-loading-spinner {
+    color: #555 !important;
+}
+
+.sns-theme-dark .sns-loading-spinner {
+    color: #ccc !important;
+}
+
+.sns-loading-text {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: var(--sns-text);
+}
+
+.sns-theme-light .sns-loading-text {
+    color: #333 !important;
+}
+
+.sns-theme-dark .sns-loading-text {
+    color: #eee !important;
+}
+
+.sns-cancel-btn {
+    margin-top: 5px;
+    padding: 6px 16px;
+    font-size: 13px !important;
+    border-radius: 6px;
+    max-width: none !important;
+    width: fit-content !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+    cursor: pointer;
+    background: rgba(127, 127, 127, 0.15);
+    border: 1px solid rgba(127, 127, 127, 0.3);
+    color: var(--sns-text);
+}
+
+.sns-cancel-btn:hover {
+    background: rgba(127, 127, 127, 0.25);
+}
+
+.sns-theme-light .sns-youtube-time {
+    color: #bbb !important;
+}
+
+.sns-theme-light .sns-yt-time {
+    color: #bbb !important;
+}
+
+/* Light Mode Overrides for Cancel Button */
+.sns-theme-light .sns-cancel-btn {
+    background: #f7f9f9 !important;
+    border: 1px solid #cfd9de !important;
+    color: #222222 !important;
+}
+
+.sns-theme-light .sns-cancel-btn:hover {
+    background: #eff3f4 !important;
+    color: #222222 !important;
+}
+
+.sns-theme-light .sns-cancel-btn:hover span,
+.sns-theme-light .sns-cancel-btn:hover i {
+    color: #1c1c1c !important;
+}
+
+/* Dark Mode Overrides for Cancel Button */
+.sns-theme-dark .sns-cancel-btn {
+    background: #2b2b2b !important;
+    border: 1px solid #333333 !important;
+    color: #e7e9ea !important;
+}
+
+.sns-theme-dark .sns-cancel-btn:hover {
+    background: #2a2a2a !important;
+    color: #e7e9ea !important;
+}
+
+.sns-cancel-btn span {
+    font-size: 13px !important;
+    line-height: 1.2 !important;
+}
+
+.sns-cancel-btn i {
+    font-size: 13px !important;
+    line-height: 1 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Mobile Responsive Adjustments */
+@media screen and (max-width: 800px) {
+    .sns-messenger-media-item {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+    }
+
+    .sns-messenger-media-item .sns-media-icon {
+        padding-bottom: 0 !important;
+    }
+
 }

@@ -7,10 +7,120 @@
     // Ensure namespace exists
     window.SNS_Reactions = window.SNS_Reactions || {};
 
+    const PROVIDERS = {
+        openai: { label: 'OpenAI', source: 'openai' },
+        claude: { label: 'Claude', source: 'claude' },
+        google: { label: 'Google Makersuite', source: 'makersuite' },
+        openrouter: { label: 'OpenRouter', source: 'openrouter' },
+        deepseek: { label: 'DeepSeek', source: 'deepseek' },
+        cohere: { label: 'Cohere', source: 'cohere' },
+        mistralai: { label: 'MistralAI', source: 'mistralai' },
+        groq: { label: 'Groq', source: 'groq' },
+        xai: { label: 'xAI', source: 'xai' },
+        perplexity: { label: 'Perplexity', source: 'perplexity' },
+        ai21: { label: 'AI21', source: 'ai21' },
+        fireworks: { label: 'Fireworks', source: 'fireworks' },
+        moonshot: { label: 'MoonshotAI', source: 'moonshot' },
+        siliconflow: { label: 'SiliconFlow (OpenRouter)', source: 'siliconflow' },
+        vertexai: { label: 'Google Vertex AI', source: 'vertexai' },
+        azure_openai: { label: 'Azure OpenAI', source: 'azure_openai' },
+        nanogpt: { label: 'NanoGPT', source: 'nanogpt' },
+        electronhub: { label: 'ElectronHub', source: 'electronhub' },
+        chutes: { label: 'Chutes', source: 'chutes' },
+        aimlapi: { label: 'AIMLAPI', source: 'aimlapi' },
+        pollinations: { label: 'Pollinations.ai', source: 'pollinations' },
+        cometapi: { label: 'CometAPI', source: 'cometapi' },
+        zai: { label: 'ZhipuAI', source: 'zai' },
+        custom: { label: 'Custom', source: 'custom' },
+    };
+
+    const DEFAULT_MODELS = {
+        openai: 'gpt-4o-mini',
+        claude: 'claude-3-5-sonnet-latest',
+        google: 'gemini-2.5-flash',
+        openrouter: 'OR_Website',
+        deepseek: 'deepseek-chat',
+        cohere: 'command-r',
+        mistralai: 'mistral-large-latest',
+        groq: 'llama-3.3-70b-versatile',
+        xai: 'grok-2',
+        perplexity: 'sonar',
+        ai21: 'jamba-1.5-large',
+        fireworks: '',
+        moonshot: 'moonshot-v1-8k',
+        siliconflow: 'deepseek-ai/DeepSeek-V3',
+        vertexai: 'gemini-2.5-flash',
+        azure_openai: '',
+        nanogpt: '',
+        electronhub: '',
+        chutes: '',
+        aimlapi: '',
+        pollinations: '',
+        cometapi: '',
+        zai: 'glm-4-air',
+        custom: '',
+    };
+
+    const PROVIDER_MODELS = {
+        openai: [
+            'gpt-5.2', 'gpt-5.2-2025-12-11', 'gpt-5.2-chat-latest', 'gpt-5.1', 'gpt-5.1-2025-11-13', 'gpt-5.1-chat-latest',
+            'gpt-5', 'gpt-5-2025-08-07', 'gpt-5-chat-latest', 'gpt-5-mini', 'gpt-5-nano',
+            'gpt-4o', 'gpt-4o-2024-11-20', 'gpt-4o-2024-08-06', 'gpt-4o-2024-05-13', 'chatgpt-4o-latest',
+            'gpt-4o-mini', 'gpt-4o-mini-2024-07-18', 'gpt-4.1', 'gpt-4.1-mini', 'gpt-4.1-nano',
+            'o1', 'o1-2024-12-17', 'o1-mini', 'o1-mini-2024-09-12', 'o1-preview',
+            'o3', 'o3-mini', 'o4-mini', 'gpt-4.5-preview', 'gpt-4-turbo', 'gpt-4-turbo-2024-04-09',
+            'gpt-4', 'gpt-3.5-turbo',
+        ],
+        claude: [
+            'claude-opus-4-6', 'claude-opus-4-5', 'claude-sonnet-4-6', 'claude-sonnet-4-5', 'claude-haiku-4-5',
+            'claude-opus-4-1', 'claude-opus-4-0', 'claude-sonnet-4-0',
+            'claude-3-7-sonnet-latest', 'claude-3-5-sonnet-latest', 'claude-3-5-haiku-latest',
+            'claude-3-opus-20240229', 'claude-3-haiku-20240307',
+        ],
+        google: [
+            'gemini-3.1-pro-preview', 'gemini-3-pro-preview', 'gemini-3-pro-image-preview', 'gemini-3-flash-preview',
+            'gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.5-flash-image',
+            'gemini-2.0-pro-exp-02-05', 'gemini-2.0-pro-exp', 'gemini-exp-1206',
+            'gemini-2.0-flash-001', 'gemini-2.0-flash', 'gemini-2.0-flash-exp',
+            'gemini-2.0-flash-thinking-exp-01-21', 'gemini-2.0-flash-thinking-exp',
+            'gemini-2.0-flash-lite-001', 'gemini-2.0-flash-lite',
+            'gemma-3n-e4b-it', 'gemma-3n-e2b-it', 'gemma-3-27b-it', 'gemma-3-12b-it',
+        ],
+        openrouter: ['OR_Website'],
+        deepseek: ['deepseek-chat', 'deepseek-coder', 'deepseek-reasoner'],
+        cohere: ['command-a-vision-07-2025', 'command-a-03-2025', 'command-r-plus', 'command-r', 'command', 'command-light', 'c4ai-aya-vision-32b', 'c4ai-aya-expanse-32b', 'c4ai-aya-23'],
+        mistralai: ['mistral-large-latest', 'mistral-medium-latest', 'mistral-small-latest', 'open-mistral-nemo', 'codestral-latest', 'pixtral-large-latest', 'ministral-8b-latest', 'open-mixtral-8x22b'],
+        groq: ['qwen/qwen3-32b', 'deepseek-r1-distill-llama-70b', 'deepseek-r1-distill-qwen-32b', 'gemma2-9b-it', 'llama-3.3-70b-versatile', 'llama-3.1-8b-instant', 'llama-3.1-70b-versatile', 'llama-3.2-11b-vision-preview', 'mistral-saba-24b', 'mixtral-8x7b-32768', 'qwen-qwq-32b', 'qwen-2.5-32b'],
+        xai: ['grok-4', 'grok-3', 'grok-3-mini', 'grok-code', 'grok-2', 'grok-2-mini', 'grok-2-vision', 'grok-beta'],
+        perplexity: ['sonar-pro', 'sonar', 'sonar-deep-research', 'sonar-reasoning-pro', 'sonar-reasoning', 'r1-1776'],
+        ai21: ['jamba-mini', 'jamba-large', 'jamba-1.5-mini', 'jamba-1.5-large'],
+        fireworks: [],
+        moonshot: ['kimi-k2-0711-preview', 'moonshot-v1-8k', 'moonshot-v1-32k', 'moonshot-v1-128k', 'kimi-latest', 'kimi-k2.5'],
+        siliconflow: ['deepseek-ai/DeepSeek-V3', 'deepseek-ai/DeepSeek-R1', 'Qwen/Qwen3-235B-A22B-Instruct-2507', 'meta-llama/Llama-3.3-70B-Instruct', 'moonshotai/Kimi-K2-Instruct', 'zai-org/GLM-4.6', 'THUDM/glm-4-9b-chat'],
+        vertexai: [
+            'gemini-3.1-pro-preview', 'gemini-3-pro-preview', 'gemini-3-pro-image-preview', 'gemini-3-flash-preview',
+            'gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.5-flash-image',
+            'gemini-2.0-pro-exp-02-05', 'gemini-2.0-pro-exp', 'gemini-exp-1206',
+            'gemini-2.0-flash-001', 'gemini-2.0-flash', 'gemini-2.0-flash-exp',
+            'gemini-2.0-flash-thinking-exp-01-21', 'gemini-2.0-flash-thinking-exp',
+            'gemini-2.0-flash-lite-001', 'gemini-2.0-flash-lite',
+            'gemma-3n-e4b-it', 'gemma-3n-e2b-it', 'gemma-3-27b-it', 'gemma-3-12b-it',
+        ],
+        azure_openai: [],
+        nanogpt: [],
+        electronhub: [],
+        chutes: [],
+        aimlapi: [],
+        pollinations: [],
+        cometapi: [],
+        zai: ['glm-5', 'glm-4.7', 'glm-4.6', 'glm-4.5', 'glm-4.5-air', 'glm-4-32b-0414-128k'],
+        custom: [],
+    };
+
     // --- Module: Utils ---
     window.SNS_Reactions.Utils = {
-        // Avatar color palette
-        avatarColors: ['#EF5350', '#EC407A', '#AB47BC', '#7E57C2', '#5C6BC0', '#42A5F5', '#29B6F6', '#26C6DA', '#26A69A', '#66BB6A', '#9CCC65', '#D4E157', '#FFEE58', '#FFCA28', '#FFA726', '#FF7043', '#8D6E63', '#78909C'],
+        // Avatar color palette (Pastel tones)
+        avatarColors: ['#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF', '#E2CBF7', '#FFD1DC', '#FADADD', '#B0E0E6', '#C1E1C1', '#FDFD96', '#FFDAC1', '#E0BBE4', '#957DAD', '#D291BC', '#FEC8D8', '#FFDFD3', '#B5EAD7'],
 
         escapeHtml(text) {
             if (!text) return '';
@@ -36,15 +146,19 @@
 
             return escaped.replace(/\n/g, '<br>');
         },
-        // Get consistent color based on username hash - same user = same color
+        // Get consistent color based on username hash using HSL for infinite distinct colors
         getAvatarColor(username) {
             if (!username) return this.avatarColors[0];
             const cleanName = String(username).replace(/^@+/, '').toLowerCase();
-            let hash = 0;
+            let hash = 5381; // standard DJB2 seed
             for (let i = 0; i < cleanName.length; i++) {
-                hash = cleanName.charCodeAt(i) + ((hash << 5) - hash);
+                hash = ((hash << 5) + hash) + cleanName.charCodeAt(i); /* hash * 33 + c */
             }
-            return this.avatarColors[Math.abs(hash) % this.avatarColors.length];
+            // Generate a pastel HSL color (Low/Mid Saturation, High Lightness)
+            const h = Math.abs(hash) % 360; // 0-359 hue
+            const s = 40 + (Math.abs(hash >> 4) % 20); // 40-60% saturation
+            const l = 75 + (Math.abs(hash >> 8) % 10); // 75-85% lightness (pastel range)
+            return `hsl(${h}, ${s}%, ${l}%)`;
         },
         // Get first letter for avatar (skip @ symbol)
         getAvatarLetter(username) {
@@ -113,7 +227,7 @@
         highlightTimestamps(text) {
             if (!text) return '';
             // Match timestamps: 0:00, 1:23, 12:34, 1:23:45
-            return text.replace(/(\d{1,2}:\d{2}(?::\d{2})?)/g, '<span class="sns-timestamp">$1</span>');
+            return text.replace(/(\d{1,2}:\d{2}(?::\d{2})?)/g, '<span class="sns-timestamp" style="font-size: 13px !important;">$1</span>');
         },
         // Extract only SNS format content from AI response (remove story elements)
         extractSNSContent(text) {
@@ -182,7 +296,8 @@
                 { id: 'twitter', icon: 'fa-brands fa-twitter', label: 'Twitter' },
                 { id: 'instagram', icon: 'fa-brands fa-instagram', label: 'Instagram' },
                 { id: 'youtube', icon: 'fa-brands fa-youtube', label: 'YouTube' },
-                { id: 'everytime', icon: 'fa-solid fa-user-graduate', label: 'Everytime' }
+                { id: 'everytime', icon: 'fa-solid fa-user-graduate', label: 'Everytime' },
+                { id: 'messenger', icon: 'fa-solid fa-comment-dots', label: 'Messenger' }
             ];
 
             let platformOptions = '';
@@ -238,7 +353,7 @@
                                 <div class="sns-menu-section">
                                     <div class="sns-menu-label">설정</div>
                                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                                        <span style="font-size:12px; opacity:0.8;">개수:</span>
+                                        <span style="font-size:12px !important; opacity:0.8;">개수:</span>
                                         <input type="number" class="sns-menu-input" min="1" max="10" value="${maxPosts}" onchange="window.SNS_Reactions.Actions.setMaxPosts(this.value)">
                                         <select class="sns-menu-lang-select" onchange="window.SNS_Reactions.Actions.setLanguage(this.value)">
                                             <option value="ko" ${settingsData.language === 'ko' ? 'selected' : ''}>한국어</option>
@@ -247,7 +362,7 @@
                                         </select>
                                     </div>
                                     <div style="display:flex; flex-direction:column; gap:4px;">
-                                        <span style="font-size:12px; opacity:0.8;">프리셋:</span>
+                                        <span style="font-size:12px !important; opacity:0.8;">프리셋:</span>
                                         <select class="sns-menu-select" onchange="window.SNS_Reactions.Actions.setPreset(this.value)">
                                             ${presetOptions}
                                         </select>
@@ -327,6 +442,25 @@
                 return `<option value="${idx}" ${isSelected}>${window.SNS_Reactions.Utils.escapeHtml(p.name)}</option>`;
             }).join('');
 
+            // Build Provider/Model Options
+            const sysProvider = settings.provider || 'openai';
+            const sysModel = settings.model || 'gpt-4o-mini';
+
+            let providerOptions = '';
+            for (const key in PROVIDERS) {
+                const selected = sysProvider === key ? 'selected' : '';
+                providerOptions += `<option value="${key}" ${selected}>${window.SNS_Reactions.Utils.escapeHtml(PROVIDERS[key].label)}</option>`;
+            }
+
+            const currentProviderModels = PROVIDER_MODELS[sysProvider] || [];
+            const isCustomModel = currentProviderModels.indexOf(sysModel) === -1 && sysModel !== '';
+            let modelOptions = '<option value="">모델 선택...</option>';
+            currentProviderModels.forEach(m => {
+                const selected = sysModel === m ? 'selected' : '';
+                modelOptions += `<option value="${m}" ${selected}>${m}</option>`;
+            });
+            modelOptions += `<option value="__custom__" ${isCustomModel ? 'selected' : ''}>직접 입력</option>`;
+
             return `
             <div class="sns-settings" style="padding: 0 10px;" id="sns_settings_content">
                 <label class="checkbox_label" style="margin: 10px 0 15px;">
@@ -336,23 +470,39 @@
                 <hr>
 
                 <div style="display:flex; gap:10px; margin-bottom:10px;">
-                    <div style="flex:1">
+                    <div style="flex:1;">
                         <label>테마 모드</label>
                         <select id="sns_theme_mode" class="text_pole">
                             <option value="dark" ${settings.themeMode === 'dark' ? 'selected' : ''}>다크</option>
                             <option value="light" ${settings.themeMode === 'light' ? 'selected' : ''}>라이트</option>
                         </select>
                     </div>
-                    <div style="flex:1">
+                    <div style="flex:1;">
                         <label>컨텍스트 메시지</label>
                         <input type="number" id="sns_context_messages" class="text_pole" value="${settings.contextMessageCount || 5}" min="0" max="20" title="SNS 생성 시 컨텍스트로 포함할 최근 메시지 수" />
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-bottom:10px;">
+                    <div style="flex:1;">
+                        <label>프로바이더</label>
+                        <select id="sns_provider" class="text_pole" onchange="window.SNS_Reactions.Actions.setProvider(this.value)">
+                            ${providerOptions}
+                        </select>
+                    </div>
+                    <div style="flex:1;">
+                        <label>모델</label>
+                        <select id="sns_model_select" class="text_pole" onchange="window.SNS_Reactions.Actions.setModelSelect(this.value)">
+                            ${modelOptions}
+                        </select>
+                        <input type="text" id="sns_model_custom" class="text_pole" value="${window.SNS_Reactions.Utils.escapeHtml(isCustomModel ? sysModel : '')}" placeholder="모델명 직접 입력" style="margin-top:6px; ${isCustomModel ? '' : 'display:none; '};" oninput="window.SNS_Reactions.Actions.setModelCustom(this.value)" />
                     </div>
                 </div>
                 <hr>
 
                 <div style="margin-bottom:10px;">
-                    <label style="font-weight:bold;">지시사항 프리셋 (플랫폼별)</label>
-                    <div style="display:flex; gap:8px; margin-top:8px; margin-bottom:8px;">
+                    <label style="font-weight:bold !important;">지시사항 프리셋 (플랫폼별)</label>
+                    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; margin-bottom:8px;">
                         <button type="button" class="sns-platform-tab menu_button ${currentPlatform === 'twitter' ? 'menu_button_checked' : ''}" data-platform="twitter">
                             <i class="fa-brands fa-twitter"></i> <span>Twitter</span>
                         </button>
@@ -364,6 +514,9 @@
                         </button>
                         <button type="button" class="sns-platform-tab menu_button ${currentPlatform === 'everytime' ? 'menu_button_checked' : ''}" data-platform="everytime">
                             <i class="fa-solid fa-user-graduate"></i> <span>Everytime</span>
+                        </button>
+                        <button type="button" class="sns-platform-tab menu_button ${currentPlatform === 'messenger' ? 'menu_button_checked' : ''}" data-platform="messenger">
+                            <i class="fa-solid fa-comment-dots"></i> <span>Messenger</span>
                         </button>
                     </div>
                     <select id="sns_instruction_presets" class="text_pole">
@@ -380,13 +533,13 @@
                     <textarea id="sns_instructions" class="text_pole" rows="4" placeholder="생성기를 위한 사용자 지정 지시사항">${settings.instructions || ''}</textarea>
                 </div>
                 <div style="display:flex; gap:8px;">
-                    <button id="sns_save_preset" class="menu_button" style="flex:1" title="현재 플랫폼에 저장">
+                    <button id="sns_save_preset" class="menu_button" style="flex:1;" title="현재 플랫폼에 저장">
                         <i class="fa-solid fa-floppy-disk"></i> 저장 (현재)
                     </button>
-                    <button id="sns_save_all_presets" class="menu_button" style="flex:1" title="모든 플랫폼에 저장">
+                    <button id="sns_save_all_presets" class="menu_button" style="flex:1;" title="모든 플랫폼에 저장">
                         <i class="fa-solid fa-cloud-arrow-up"></i> 저장 (전체)
                     </button>
-                    <button id="sns_delete_preset" class="menu_button danger" style="width:auto" title="현재 플랫폼에서 삭제">
+                    <button id="sns_delete_preset" class="menu_button danger" style="width:auto;" title="현재 플랫폼에서 삭제">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
@@ -617,7 +770,7 @@
                 }).join('')}
                  </div>`;
             } else {
-                photoContent = `<div class="sns-instagram-photo-placeholder"><i class="fa-regular fa-image" style="font-size: 48px; opacity: 0.5;"></i></div>`;
+                photoContent = `<div class="sns-instagram-photo-placeholder"><i class="fa-regular fa-image" style="font-size: 48px !important; opacity: 0.5;"></i></div>`;
             }
 
 
@@ -712,7 +865,7 @@
                     ${processedReplies.map(r => `
                         <div class="sns-everytime-comment ${r.classString}">
                             <div class="sns-everytime-comment-avatar">
-                                <i class="fa-solid fa-user" style="color:#ffffff; font-size: 12px;"></i>
+                                <i class="fa-solid fa-user" style="color:#ffffff; font-size: 12px !important;"></i>
                             </div>
                             <div class="sns-everytime-comment-body">
                                 <div class="sns-everytime-comment-header">
@@ -763,19 +916,22 @@
             if (hasReplies) {
                 repliesHtml = `<div class="sns-accordion-content yt-replies" id="replies-${post.id}">
                     ${post.replies.map(r => {
+                    const isSubAuthor = (r.username || '').includes('(작성자)');
+                    const cleanSubUser = (r.username || '').replace(/\s*\(작성자\)\s*/g, '');
+                    const authorClassSub = isSubAuthor ? ' sns-youtube-author-badge' : '';
                     return `
                         <div class="sns-youtube-comment sub-comment ${r.isSub ? 'nested-reply' : ''}">
-                            <div class="sns-youtube-avatar small" style="width:24px; height:24px; font-size:12px; background-color:${Utils.getAvatarColor(r.username)};">${Utils.getAvatarLetter(r.username)}</div>
+                            <div class="sns-youtube-avatar small" style="width:24px; height:24px; font-size:12px !important; background-color:${Utils.getAvatarColor(cleanSubUser)};">${Utils.getAvatarLetter(cleanSubUser)}</div>
                             <div class="sns-youtube-body">
                                 <div class="sns-youtube-header">
-                                    <span class="sns-youtube-username" style="font-weight: 500 !important; font-size: 13px !important; line-height: 1.4 !important;">${Utils.escapeHtml(r.username)}</span>
+                                    <span class="sns-youtube-username${authorClassSub}" style="font-weight: 500 !important; font-size: 13px !important; line-height: 1.4 !important;">${Utils.escapeHtml(cleanSubUser)}</span>
                                     <span class="sns-youtube-time" style="font-size: 12px !important; line-height: 1.4 !important;">${r.time || ''}</span>
                                 </div>
                                 <div class="sns-youtube-text">${Utils.highlightTimestamps(Utils.escapeHtml(r.content))}</div>
                                 <div class="sns-youtube-actions">
                                     <i class="fa-regular fa-thumbs-up"></i>
                                     <i class="fa-regular fa-thumbs-down"></i>
-                                    <span style="font-size:12px; font-weight:500;">답글</span>
+                                    <span style="font-size:12px !important; font-weight:500 !important;">답글</span>
                                 </div>
                             </div>
                         </div>
@@ -784,15 +940,18 @@
             }
 
             const likeCount = post.stats?.likes || 0;
-            // Display username exactly as generated (preserving @ if present)
-            const displayUser = post.username || post.displayName || 'User';
+            // Display username exactly as generated, check for author status
+            const rawUser = post.username || post.displayName || 'User';
+            const isMainAuthor = rawUser.includes('(작성자)');
+            const displayUser = rawUser.replace(/\s*\(작성자\)\s*/g, '');
+            const authorClassMain = isMainAuthor ? ' sns-youtube-author-badge' : '';
 
             return `
                  <div class="sns-youtube-comment">
-                    <div class="sns-youtube-avatar" style="background-color: ${Utils.getAvatarColor(post.username)};">${Utils.getAvatarLetter(post.username)}</div>
+                    <div class="sns-youtube-avatar" style="background-color: ${Utils.getAvatarColor(displayUser)};">${Utils.getAvatarLetter(displayUser)}</div>
                     <div class="sns-youtube-body">
                         <div class="sns-youtube-header">
-                            <span class="sns-youtube-username" style="font-weight: 500 !important; font-size: 13px !important; line-height: 1.4 !important;">${Utils.escapeHtml(displayUser)}</span>
+                            <span class="sns-youtube-username${authorClassMain}" style="font-weight: 500 !important; font-size: 13px !important; line-height: 1.4 !important;">${Utils.escapeHtml(displayUser)}</span>
                             <span class="sns-youtube-time" style="font-size: 12px !important; line-height: 1.4 !important;">${post.date || ''}</span>
                         </div>
                         <div class="sns-youtube-text">${Utils.highlightTimestamps(Utils.escapeHtml(post.content))}</div>
@@ -802,12 +961,120 @@
                                 <span class="sns-youtube-action-count">${Utils.formatNumber(likeCount)}</span>
                             </div>
                             <i class="fa-regular fa-thumbs-down"></i>
-                            <span style="font-size:12px; font-weight:500; cursor:pointer;" onclick="${hasReplies ? `window.SNS_Reactions.Actions.toggleContent(this, 'replies-${post.id}')` : ''}">답글 (${replyCount})</span>
+                            <span style="font-size:12px !important; font-weight:500 !important; cursor:pointer;" onclick="${hasReplies ? `window.SNS_Reactions.Actions.toggleContent(this, 'replies-${post.id}')` : ''}">답글 (${replyCount})</span>
                         </div>
                     </div>
                 </div>
                 ${repliesHtml}
             `;
+        },
+
+        messengerCard: (post) => {
+            const Utils = window.SNS_Reactions.Utils;
+            const STContext = typeof SillyTavern !== 'undefined' ? SillyTavern.getContext() : null;
+            const userName = STContext && STContext.name1 ? STContext.name1.toLowerCase() : 'you';
+
+            let html = `
+                <div class="sns-skin-messenger">
+                    <div class="sns-messenger-header">
+                        <div class="sns-messenger-room-name">${Utils.escapeHtml(post.room || '1:1 Chat')}</div>
+                        <div class="sns-messenger-members"><i class="fa-solid fa-users"></i> ${Utils.escapeHtml((post.members || []).map(m => m.replace(/^@+/, '')).join(', '))}</div>
+                    </div>
+                    <div class="sns-messenger-body">
+            `;
+
+            if (post.messages && post.messages.length > 0) {
+                // Determine right-side user and avatar colors
+                const uniqueUsers = [...new Set(post.messages.map(m => m.username))];
+                let rightUser = null;
+
+                // 1. Prioritize {{user}} for right side
+                for (const u of uniqueUsers) {
+                    const uLow = u.toLowerCase();
+                    if (uLow === userName || uLow === 'you' || u === '나') {
+                        rightUser = u;
+                        break;
+                    }
+                }
+
+                // 2. If {{user}} is not in chat, pick the last person who spoke or just the first unique user as fallback
+                if (!rightUser) {
+                    // E.g., The last person to send a message could be the POV, or just pick the first person found.
+                    // For consistency, let's pick the last person who speaks in the log to be the POV if user is absent
+                    rightUser = post.messages[post.messages.length - 1].username;
+                }
+
+                // Assign unique colors to left-side users Avoid overlaps
+                const userColors = {};
+
+                for (const u of uniqueUsers) {
+                    if (u !== rightUser) {
+                        userColors[u] = Utils.getAvatarColor(u);
+                    }
+                }
+
+                post.messages.forEach(msg => {
+                    // Check if this message belongs to the designated right-side user
+                    const isUser = msg.username === rightUser;
+                    const alignClass = isUser ? 'sns-messenger-right' : 'sns-messenger-left';
+                    const showAvatar = !isUser;
+
+                    // Assign consistent color (right side doesn't show avatar, so color only matters for left side)
+                    const avatarColor = showAvatar ? Utils.getAvatarColor(msg.username) : '';
+
+                    // NEW: Extract Media Tags
+                    let textContent = msg.content || '';
+                    let mediaHtml = '';
+                    const mediaRegex = /\[(사진|Image|Video|동영상|미디어|Photo)\](?:\s*([^\n\[]+))?/gi;
+                    const mediaMatches = [...textContent.matchAll(mediaRegex)];
+
+                    if (mediaMatches.length > 0) {
+                        mediaMatches.forEach(m => {
+                            const type = m[1];
+                            const desc = m[2] ? m[2].trim() : '';
+                            const isVideo = type.match(/(동영상|Video)/i);
+                            const icon = isVideo ? '<i class="fa-solid fa-play sns-media-icon"></i>' : '<i class="fa-regular fa-image sns-media-icon"></i>';
+
+                            mediaHtml += `<div class="sns-messenger-media-item">
+                                ${icon}
+                                <span class="sns-media-placeholder">${Utils.escapeHtml(desc || type)}</span>
+                            </div>`;
+                        });
+                        // Remove parsed media tags from text
+                        textContent = textContent.replace(mediaRegex, '').trim();
+                    }
+
+                    const bubbleHtml = `
+                        <div class="sns-messenger-row ${alignClass}">
+                            ${showAvatar ? `
+                            <div class="sns-messenger-avatar" style="background-color: ${avatarColor};">
+                                ${Utils.getAvatarLetter(msg.username)}
+                            </div>
+                            ` : ''}
+                            <div class="sns-messenger-bubble-group">
+                                <div class="sns-messenger-name">${Utils.escapeHtml(msg.username.replace(/^@+/, ''))}</div>
+                                <div class="sns-messenger-message-wrap">
+                                    ${isUser ? `<span class="sns-messenger-time">${msg.time || ''}</span>` : ''}
+                                    <div class="sns-messenger-bubble" style="display: flex; flex-direction: column; gap: 4px;">
+                                        ${mediaHtml}
+                                        ${textContent ? `<span style="font-size: 14px !important;">${Utils.escapeHtml(textContent)}</span>` : ''}
+                                    </div>
+                                    ${!isUser ? `<span class="sns-messenger-time">${msg.time || ''}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    html += bubbleHtml;
+                });
+            } else {
+                html += `<div class="sns-messenger-empty">대화 내용이 없습니다.</div>`;
+            }
+
+            html += `
+                    </div>
+                </div>
+            `;
+            return html;
         }
     };
 
@@ -818,6 +1085,8 @@
             this.defaultSettings = {
                 enabled: true,
                 platform: 'twitter',
+                provider: 'openai',
+                model: 'gpt-4o-mini',
                 maxPosts: 3,
                 includeReplies: true,
                 includeQuotes: false,
@@ -829,7 +1098,8 @@
 3. **REALISM & CONTEXT**:
    - Reaction counts (Likes/Retweets) MUST be realistic based on the Character's fame (e.g., Millions for stars, single digits for nobodies).
    - Content MUST reflect the platform culture (e.g., Hashtags for Twitter, Emojis for Instagram).
-   - Reactions should mimic diverse user personas (Fans, Haters, Bots, Neutrals).`,
+   - Reactions should mimic diverse user personas (Fans, Haters, Bots, Neutrals).
+   - **Twitter Usernames**: Use highly realistic, quirky Korean Twitter naming conventions. Examples: '안경쓴 물만두', '플란다스의개노답', '데카르트', '그건니생각이고', '사담 뒷계정', '김비서', '광개콩왕', '선글라스감자'. Avoid generic anime or overly emotional/cringy names.`,
                 additionalInstruction: "",
                 language: 'ko',  // ko, en, ja
                 themeMode: 'dark',
@@ -837,7 +1107,8 @@
                     twitter: [],
                     instagram: [],
                     youtube: [],
-                    everytime: []
+                    everytime: [],
+                    messenger: []
                 },
                 lastPlatform: 'twitter',
                 contextMessageCount: 5, // Number of recent messages to include as context for SNS generation
@@ -862,12 +1133,13 @@
 
                 // Ensure platformPresets has all platform arrays
                 if (!this.settings.platformPresets) {
-                    this.settings.platformPresets = { twitter: [], instagram: [], youtube: [], everytime: [] };
+                    this.settings.platformPresets = { twitter: [], instagram: [], youtube: [], everytime: [], messenger: [] };
                 } else {
                     if (!this.settings.platformPresets.twitter) this.settings.platformPresets.twitter = [];
                     if (!this.settings.platformPresets.instagram) this.settings.platformPresets.instagram = [];
                     if (!this.settings.platformPresets.youtube) this.settings.platformPresets.youtube = [];
                     if (!this.settings.platformPresets.everytime) this.settings.platformPresets.everytime = [];
+                    if (!this.settings.platformPresets.messenger) this.settings.platformPresets.messenger = [];
                 }
 
                 // Ensure platformPresetIndexes exists
@@ -1420,10 +1692,11 @@
             }
 
             // 2. Extract Posts
-            const postMatches = text.matchAll(/\[POST\]([\s\S]*?)\[\/POST\]/gi);
+            // Make closing tag optional to prevent parsing failures if LLM gets truncated
+            const postMatches = text.matchAll(/\[POST\]([\s\S]*?)(?:\[\/POST\]|$)/gi);
             const posts = [];
             for (const match of postMatches) {
-                const postContent = match[1];
+                const postContent = match[0]; // Pass the full [POST]...[/POST] block
                 const parsed = this.parsePostContent(postContent);
                 if (parsed) {
                     // Attach video context to each post for persistence
@@ -1436,15 +1709,91 @@
             return posts;
         }
 
-        parsePostContent(content) {
-            const userMatch = content.match(/User:\s*(.+)/i); // Permissive regex
-            const nameMatch = content.match(/Name:\s*(.+)/i);
-            const titleMatch = content.match(/(?:Title|제목|Subject|Header)\s*:?\s*(.+)/i);
-            const dateMatch = content.match(/Date:\s*(.+)/i);
+        parsePostContent(rawBlock) {
+            const bodyMatch = rawBlock.match(/\[POST\]\s*([\s\S]*?)\s*(?:\[\/POST\]|$)/i);
+            if (!bodyMatch) return null;
+            let body = bodyMatch[1].trim();
+
+            const post = {
+                title: '',
+                room: '',
+                members: [],
+                username: '',
+                displayName: '',
+                content: '',
+                date: '',
+                media: [],
+                quotes: [],
+                replies: [],
+                messages: [],
+                stats: { likes: 0, retweets: 0, quotes: 0, replies: 0 },
+                quoteRt: null
+            };
+
+            // Parse [MESSAGES] block for Messenger
+            const messagesMatch = body.match(/\[MESSAGES\]\s*([\s\S]*?)\s*(?:\[\/MESSAGES\]|$)/i);
+            if (messagesMatch) {
+                const msgsText = messagesMatch[1].trim();
+                const msgLines = msgsText.split('\n').map(l => l.trim()).filter(l => l);
+                msgLines.forEach(line => {
+                    // Match: User: Content [Time] or └ User: Content [Time]
+                    // We use `\[([^\]]+)\]` to precisely match the last bracketed group as time, rather than a greedy `.*?` which swallows internal tags.
+                    const msgMatch = line.match(/^(?:└\s*)?([^:]+?)\s*:\s*(.*?)(?:\s*\[([^\]]+)\])?$/);
+                    if (msgMatch) {
+                        post.messages.push({
+                            username: msgMatch[1].trim(),
+                            content: msgMatch[2].trim(),
+                            time: msgMatch[3] ? msgMatch[3].trim() : ''
+                        });
+                    } else {
+                        // Fallback message
+                        post.messages.push({
+                            username: 'Unknown',
+                            content: line,
+                            time: ''
+                        });
+                    }
+                });
+                body = body.replace(/\[MESSAGES\][\s\S]*?(?:\[\/MESSAGES\]|$)/i, '').trim();
+            }
+
+            // Extract Everytime Title / YouTube Video Title
+            const titleMatch = body.match(/^(?:Title|제목|Subject|Header)\s*:?\s*(.+)$/im);
+            if (titleMatch) {
+                post.title = titleMatch[1].trim();
+                // Remove title line
+                body = body.replace(titleMatch[0], '').trim();
+            }
+
+            // Extract Messenger Room
+            const roomMatch = body.match(/^(?:Room|방|채팅방)\s*:?\s*(.+)$/im);
+            if (roomMatch) {
+                post.room = roomMatch[1].trim();
+                body = body.replace(roomMatch[0], '').trim();
+            }
+
+            // Extract Messenger Members
+            const membersMatch = body.match(/^(?:Members|참가자|멤버)\s*:?\s*(.+)$/im);
+            if (membersMatch) {
+                post.members = membersMatch[1].split(',').map(m => m.trim());
+                body = body.replace(membersMatch[0], '').trim();
+            }
+
+            const userMatch = body.match(/User:\s*(.+)/i); // Permissive regex
+            const nameMatch = body.match(/Name:\s*(.+)/i);
+            const dateMatch = body.match(/Date:\s*(.+)/i);
+            const statsMatch = body.match(/Stats:\s*(.*)/i);
+
+            // Extract Subsections (Replies, Quotes) BEFORE cleaning the body
+            const replies = this.parseSubSection(body, 'REPLIES');
+            const quotes = this.parseSubSection(body, 'QUOTES');
+
+            // Stats from LLM (flavor) matches: Likes, Retweets, Quotes
+            const flavorStats = this.parseStats(statsMatch ? statsMatch[1] : '');
 
             // Extract All Media/Photos
             // Support both Photo and Media prefixes, case-insensitive, globally
-            const mediaMatches = [...content.matchAll(/(?:Photo|Media):\s*(.+)/gi)];
+            const mediaMatches = [...body.matchAll(/(?:Photo|Media):\s*(.+)/gi)];
             let media = [];
             for (const m of mediaMatches) {
                 const mediaLine = m[1].trim();
@@ -1470,7 +1819,7 @@
             // Extract Quote RT
             let quoteRt = null;
             // Relaxed regex: allows whitespace before closing bracket ]
-            const quoteRtMatch = content.match(/\[Quote RT of\s+(.+?)\s+(@[\w_]+)\s*\]([\s\S]*?)\[\/Quote RT\]/i);
+            const quoteRtMatch = body.match(/\[Quote RT of\s+(.+?)\s+(@[\w_]+)\s*\]([\s\S]*?)\[\/Quote RT\]/i);
             if (quoteRtMatch) {
                 const quoteContent = quoteRtMatch[3].trim();
                 // Extract media from quote content
@@ -1490,7 +1839,7 @@
             }
 
             // Clean body
-            let body = content
+            body = body
                 .replace(/User:.*\n?/gi, '')
                 .replace(/Name:.*\n?/gi, '')
                 .replace(/Title:.*\n?/gi, '')
@@ -1502,13 +1851,6 @@
                 .replace(/\[Quote RT of[\s\S]*?\[\/Quote RT\]/gi, '') // Remove Quote RT block
                 .replace(/^Content:\s*/gim, '') // Remove Content: prefix
                 .trim();
-
-            const statsMatch = content.match(/Stats:\s*(.*)/i);
-            const replies = this.parseSubSection(content, 'REPLIES');
-            const quotes = this.parseSubSection(content, 'QUOTES');
-
-            // Stats from LLM (flavor) matches: Likes, Retweets, Quotes
-            const flavorStats = this.parseStats(statsMatch ? statsMatch[1] : '');
 
             // Get initial photo
             let photo = media.length > 0 ? media[0] : null;
@@ -1530,42 +1872,44 @@
                 cleanDisplayName = '';
             }
 
-            return {
-                id: Date.now().toString(36) + Math.random().toString(36).substr(2),
-                username: cleanUsername,
-                displayName: cleanDisplayName,
-                title: titleMatch ? titleMatch[1].trim() : '',
-                date: dateMatch ? dateMatch[1].trim() : '',
-                content: body,
-                photo: photo,
-                media: media,
-                stats: flavorStats,
-                replies: replies,
-                quotes: quotes,
-                quoteRt: quoteRt,
-                timestamp: new Date().toISOString()
-            };
+            post.id = Date.now().toString(36) + Math.random().toString(36).substr(2);
+            post.username = cleanUsername;
+            post.displayName = cleanDisplayName;
+            post.date = dateMatch ? dateMatch[1].trim() : '';
+            post.content = body;
+            post.photo = photo;
+            post.media = media;
+            post.stats = flavorStats;
+            post.replies = replies;
+            post.quotes = quotes;
+            post.quoteRt = quoteRt;
+            post.timestamp = new Date().toISOString();
+
+            return post;
         }
 
         parseStats(statsLine) {
-            // Stats format from LLM: "15.5K 300R 5Q"
+            // Stats format from LLM: "15.5K 300R 5Q" or "1,247L 45R 12Q"
             // Likes = first number (no suffix or any suffix that's not R/Q)
             // Retweets = number with R suffix
             // Quotes = number with Q suffix
 
-            // Extract retweets (XR format)
-            const retweetsMatch = statsLine.match(/([\d.]+[KkMm]?)\s*[Rr]/);
+            // Strip commas from numbers before parsing (e.g. 1,247 -> 1247)
+            const cleanStats = statsLine.replace(/([\d]),([\d])/g, '$1$2');
+
+            // Extract retweets (XR or XS format for Everytime Scraps/Shares)
+            const retweetsMatch = cleanStats.match(/([\d.]+[KkMm]?)\s*[RrSs]/);
             const retweetsStr = retweetsMatch ? retweetsMatch[1] : '0';
 
-            // Extract quotes (XQ format)
-            const quotesMatch = statsLine.match(/([\d.]+[KkMm]?)\s*[Qq]/);
+            // Extract quotes/comments (XQ or XC format for Everytime Comments)
+            const quotesMatch = cleanStats.match(/([\d.]+[KkMm]?)\s*[QqCc]/);
             const quotesStr = quotesMatch ? quotesMatch[1] : '0';
 
-            // Extract likes - first number in the line (before any R/Q suffixed numbers)
+            // Extract likes - first number in the line (before any R/S/Q/C suffixed numbers)
             // Remove retweets and quotes patterns first, then get first number
-            let cleanedLine = statsLine
-                .replace(/([\d.]+[KkMm]?)\s*[Rr]/g, '')
-                .replace(/([\d.]+[KkMm]?)\s*[Qq]/g, '')
+            let cleanedLine = cleanStats
+                .replace(/([\d.]+[KkMm]?)\s*[RrSs]/g, '')
+                .replace(/([\d.]+[KkMm]?)\s*[QqCc]/g, '')
                 .trim();
             const likesMatch = cleanedLine.match(/([\d.]+[KkMm]?)/);
             const likesStr = likesMatch ? likesMatch[1] : '0';
@@ -1603,13 +1947,7 @@
                     block += `Media: ${post.photo}\n`;
                 }
 
-                if (post.media && post.media.length > 0) {
-                    post.media.forEach(m => {
-                        block += `Media: ${m}\n`;
-                    });
-                } else if (post.photo) {
-                    block += `Media: ${post.photo}\n`;
-                }
+
 
                 // Reconstruct Stats
                 // If stored stats are object { likes: "10K", ... } -> convert to string "10K 5R 2Q"
@@ -1883,8 +2221,8 @@
                             <!-- Progress Bar -->
                             <div class="sns-yt-progress-container">
                                 <div class="sns-yt-progress-bar">
-                                    <div class="sns-yt-progress-fill" style="width: ${progressPercent}%"></div>
-                                    <div class="sns-yt-progress-handle" style="left: ${progressPercent}%">
+                                    <div class="sns-yt-progress-fill" style="width: ${progressPercent}%;"></div>
+                                    <div class="sns-yt-progress-handle" style="left: ${progressPercent}%;">
                                         <div class="sns-yt-most-viewed-tooltip">
                                             <div class="sns-yt-tooltip-label">[가장 많이 본 장면]</div>
                                             <div class="sns-yt-tooltip-text">${Utils.escapeHtml(mostViewedText)}</div>
@@ -1940,6 +2278,17 @@
                     html += '<div class="sns-carousel-wrapper" onscroll="window.SNS_Reactions.Actions.onCarouselScroll(this)">';
                     posts.forEach(post => {
                         html += window.SNS_Reactions.Templates.everytimeCard(post);
+                    });
+                    html += '</div>';
+                    html += `<button class="sns-nav-btn next" onclick="window.SNS_Reactions.Actions.scrollCarousel(this, 1)"><i class="fa-solid fa-chevron-right"></i></button>`;
+                    html += '</div>';
+                } else if (platform === 'messenger') {
+                    // Messenger: Carousel Layout (Requested by User)
+                    html += '<div class="sns-carousel-container">';
+                    html += `<button class="sns-nav-btn prev" disabled onclick="window.SNS_Reactions.Actions.scrollCarousel(this, -1)"><i class="fa-solid fa-chevron-left"></i></button>`;
+                    html += '<div class="sns-carousel-wrapper" onscroll="window.SNS_Reactions.Actions.onCarouselScroll(this)">';
+                    posts.forEach(post => {
+                        html += window.SNS_Reactions.Templates.messengerCard(post);
                     });
                     html += '</div>';
                     html += `<button class="sns-nav-btn next" onclick="window.SNS_Reactions.Actions.scrollCarousel(this, 1)"><i class="fa-solid fa-chevron-right"></i></button>`;
@@ -2082,11 +2431,12 @@ You are generating SNS reactions for an ADULT FICTION roleplay. This is consent-
 - If context is mild → keep reactions mild
 - **MIRROR the story's tone - do not downgrade it**
 
-**Platform Expression Styles:**
-- Twitter: direct reactions, slang, "ㅋㅋㅋ 이거 실화?", innuendos
-- Instagram: 🔥👀💦😳, suggestive comments, "분위기 미쳤다"
-- YouTube: "방금 뭐 본 거야", explicit descriptions of scenes
-- Everytime: anonymous = unfiltered honesty, direct gossip
+**Platform Expression Styles (BE REALISTIC & RAW):**
+- Twitter: unhinged reactions, heavy slang/typos, "ㅋㅋㅋ 아 미쳤냐고", dramatic crying
+- Instagram: 🔥👀💦😳, suggestive/influencer praise, "얼굴 폼 미쳤다", heavy emojis
+- YouTube: timestamp analysis "3:42 킬포ㅋㅋ", detailed scene breakdowns, intense reply debates
+- Everytime: cynical university students, blunt facts, short 음슴체 comments ("ㅇㅈ", "오늘 학식 개노맛")
+- Messenger: fast-paced chat, typos, interruptions, "아니 근데 진짜로"
 
 **USER INSTRUCTION PRIORITY:**
 - If User Preset or Additional Instruction mentions mature content → FOLLOW WITHOUT QUESTION
@@ -2100,6 +2450,7 @@ You are generating SNS reactions for an ADULT FICTION roleplay. This is consent-
 - Be CREATIVE and RANDOM - imagine different people reacting.
 
 ## ⚠️ STRICT PROHIBITIONS (Violation = Generation Failure)
+- **Usernames, Nicknames, and IDs MUST be COMPLETELY INDEPENDENT of the comment content!** (e.g., If the comment is about loving coffee, the username MUST NOT be "CoffeeLover". Do NOT generate usernames that describe or summarize the text they wrote. Generate realistic, random usernames.)
 - NO @@ (double @). Use single @ only.
 - NO "Name: Name". Generate actual nicknames.
 - YouTube MUST include Subscribers: field.
@@ -2135,6 +2486,11 @@ You are generating SNS reactions for an ADULT FICTION roleplay. This is consent-
 - If chat mentions Tokyo → use Japanese location references
 - If chat mentions NYC → use American location references
 
+## 👤 CHARACTER CONSISTENCY (CRITICAL OOC PREVENTION)
+- **NEVER BREAK CHARACTER:** If any character existing in the current Chat or World Info appears in the generated SNS reactions, they MUST strictly adhere to their established personality, tone, quirks, and relationship dynamics.
+- **NO OOC (Out of Character):** Do not make them act in ways that contradict their known traits, even in an SNS context. If a character is normally cold and cynical, their SNS comments should reflect that, not suddenly become bubbly.
+- New/Anonymous characters generated solely for the SNS reactions can act freely according to the platform's culture.
+
 ## Language
 ${this.getLanguageInstruction()}
 
@@ -2163,15 +2519,18 @@ ${this.getLanguageInstruction()}
 ### Platform Culture
 - Korean female-dominated (여초) Twitter culture
 - Mix Korean/English naturally
-- Profanity, slang, emotional expressions allowed
+- Extremely emotional, dramatic overreactions, typos, and internet slang are HIGHLY encouraged
 - Adapt to situation and character
 
-### Reaction Types
-- Fans: Excitement, exaggerated reactions
-- Antis: Criticism, sarcasm
-- Normies: Curious, asking for info
-- News bots: Breaking news style
-- Meme accounts: Jokes, parody
+### Reaction Types & Tone
+**⚠️ CRITICAL: The Tweet Content MUST be as entertaining, witty, and chaotic as the Usernames!**
+- Do NOT generate generic, boring compliments like "너무 멋지다", "귀여워".
+- Emulate the deep-otaku, unhinged vibe of real Twitter: dropping jaw-dropping metaphors, speaking in absolute hyperbole, making absurd connections, and using sharp, cynical humor or sheer desperation.
+- Mix different reactions:
+  - **Deranged Fans**: "내 이마 팍팍 치는 중 이거 실화냐", "아악 제발 나대신 출근해줘"
+  - **Deep Analysts / Scholars**: Writing a completely serious philosophical essay about a character's face.
+  - **Cynical / Tired**: "어쩌라고 내 최애 얼굴이 복지임. 월요일 개나 줘"
+  - **Pure Chaos**: "ㅁㅊ ㅁㅊ ㅁㅊ ㅁㅊ 아악", "이거보고 이마치다가 거북목 완치됨"
 
 ### Post Types
 1. Normal tweet: Text + hashtags/mentions
@@ -2188,8 +2547,20 @@ ${this.getLanguageInstruction()}
 
 ### ❌ ABSOLUTELY BANNED:
 1. **@@** (double @) - Use single @ only!
-2. **Name: Name** - Generate actual Korean nicknames
+2. **Name: Name** - BANNED! Generate actual Korean nicknames
 3. Empty fields - All required fields must have content
+4. **Childish/Lazy Usernames** - BANNED! Do not use names like @kpop_fan, @curious_user or "찐팬", "팬계정1"
+
+### 🎯 Korean Twitter Username Master Guide (CRITICAL)
+- **Realism is Key**: Use highly realistic, quirky Korean Twitter naming conventions.
+- **NEVER** make the username exactly describe the comment content! True Twitter users have static, random names completely unrelated to what they are tweeting right now.
+- **Mix the following 6 styles for usernames**:
+  1. Noun/Proper Noun + Character/Animal: '넥타이 맨 푸들', '다나카 고양이', '안경쓴 물만두', '스미스 김치볶음밥', '건전지참새'
+  2. Wordplay / Parody: '내마음에안착', '21세기마법사', '플란다스의개노답', '셜록홈즈의오른팔'
+  3. Titles / Historical Figures: '김비서', '박과장', '왕실기사단장', '데카르트', '칸트', '수석연구원'
+  4. Conversational / Status / Cynical: '그건니생각이고', '저기요선생님', '아그래서어쩌라고', '본계로가세요', '동결이래요'
+  5. Emoticons only (No text): '₍ᐢ. ̫.ᐢ₎', '૮( • ﻌ • )ა', '🐾🦴', '⋆⁺₊⋆ ☾', '🎧🎶'
+  6. System/Archive Accounts: '익명 제보봇', '사담 뒷계정', '뫄뫄 대사 아카이브', 'XX 연성창고'
 
 ### ✅ User/Name Format:
 - User: @lowercase_handle (required, English only)
@@ -2306,11 +2677,12 @@ Stats: 156L 23R 2Q
                     platformInstruction = `[Instagram]
 ## Instagram Post Generation
 
-### Platform Culture
-- Aesthetic, emotional feed
-- Visual content focused (photo/video required)
-- Daily life, flex, emotions
-- Emoji usage optional, be natural
+### Platform Culture & Tone
+**⚠️ CRITICAL: Instagram MUST be heavily focused on Aesthetics, Flex (허세), and Influencer Vibes!**
+- **Flex & Vanity**: Showing off outfits (OOTD), cafes, money, or looks but pretending to be humble ("소소한 일상~", "오랜만에 외출🤍").
+- **Late Night Emotion (감성글)**: Writing deep, poetic, or slightly depressing thoughts late at night, often separated by dots.
+- **Aggressive Praise / Hype**: Comments must hype up the poster aggressively ("미모 무슨 일", "언니 나 죽어", "셔터 누를 맛 나겠다").
+- **Emojis are Essential**: Use 🔥, 👀, 🤍, 💫, 📸 naturally but generously.
 
 ### Poster Selection (Flexible)
 - {{char}}: Character's own post
@@ -2320,13 +2692,16 @@ Stats: 156L 23R 2Q
 ### Media (Required - SINGLE ONLY)
 - Media: [Image] visual description (Korean)
 - OR Media: [Video] video description (Korean)
+- 📸 The visual description MUST be extremely vivid and detailed, capturing the exact aesthetic vibe, lighting, and mood (e.g. "햇살이 비치는 나른한 오후의 필름 카메라 감성").
 - ⚠️ Instagram allows ONLY 1 media per post (no carousel support)
 
-### Caption Style
-- Use line breaks freely
-- Dot (.) spacers for aesthetic
-- Hashtags: end, middle, or none
-- Tone: Emotional, daily, or flex
+### Caption Style & Hashtags
+- Use line breaks freely using Dot (.) spacers for aesthetic breathing room.
+- **Hashtags MUST be realistic Korean IG tags**:
+  - Daily/Cafe: #일상 #카페투어 #소통 #맞팔 #좋반
+  - Fashion/Flex: #ootd #오오티디 #flex #오늘의코디
+  - Emotional: #새벽감성 #분위기 #기록
+- Tone: Pretending to be effortless while looking perfectly curated.
 
 ---
 ## 🚫 CRITICAL RULES - MUST FOLLOW 🚫
@@ -2371,11 +2746,13 @@ Name: 댓글 (BANNED! "Name" is not a username)
 
 ---
 
-### Comment Culture
-- Short reactions: "예뻐요", "대박"
-- Friend tags: "@friend 이거 봐!!"
-- Info requests: "어디예요?"
-- Diverse usernames (cafe_lover, daily_seoul)
+### Comment Types & Tone
+**⚠️ CRITICAL: IG Comments MUST mirror real Korean influencer/friend dynamics!**
+- **Hype Squad**: "와 미모 미쳤다 폼 도랏", "얼굴 피드 공격력 무엇 🔥"
+- **Desperate Fans**: "언니 나랑 결혼해", "오늘도 눈호강 완료 🤍"
+- **Curious/Copycats**: "혹시 자켓 정보 알 수 있을까요? 👀", "어디 카페예요? 분위기 넘예"
+- **Close Friends (Teasing)**: "아싸 또 잘생긴 척 한다", "오늘 쫌 신경썼네 ㅋ"
+- **Diverse Usernames (IG Style)**: Use combinations of real names, words, and underscores (e.g., _jihoon.k, cafe_lover_92, hye__jin_)
 
 ### Format (Required fields MUST be filled)
 [POST]
@@ -2418,22 +2795,55 @@ minsu_daily: @friend_jiyoung 우리도 가자 [20분]
 [/Instagram]`;
                     break;
 
+                case 'messenger':
+                    platformInstruction = `
+### MESSENGER GENERATION RULES
+1. Generate ${maxPosts} DISTINCT chat rooms/conversations. Each room is a separate [POST] block.
+2. The format simulates a messenger application (like KakaoTalk, Telegram, or Line).
+3. **MANDATORY FORMAT PER ROOM**:
+\`\`\`
+[POST]
+Room: <Name of the Chat Room or "1:1 Chat">
+Members: <Comma-separated list of participants>
+
+[MESSAGES]
+<Participant 1>: <Message text> [<Time in HH:MM format>]
+<Participant 2>: <Message text> [<Time in HH:MM format>]
+...
+[/MESSAGES]
+[/POST]
+\`\`\`
+4. **Content Rules**:
+   - The conversation MUST NOT continue the main story. It should only be a *reaction* or discussion about the provided context.
+   - Use short, fragmented messages typical of real-world text messaging. INCLUDE TYPOS!
+   - Use typical messenger slang (ㅋㅋ, ㅎㅎ, ㅠ), internet abbreviations, and realistic emotional swings where appropriate. Let them interrupt each other.
+   - **CRITICAL**: Do NOT generate solitary messages, diaries, or self-chats ("혼잣말", "나에게 보내기"). The chat MUST involve AT LEAST TWO different interacting people.
+   - **NICKNAME RULE**: Absolutely NEVER use underscores (\`_\`) or descriptive role prefixes in names! Just use "김팀장", "지수", NOT "영업팀_김팀장" or "짜증난_지수".
+   - The \`{{user}}\` (or main character) should participate in the chat if relevant, and their name should match the character context.
+   - Ensure the timestamps flow logically (e.g., sequentially increasing).
+   - **MEDIA (PHOTOS/VIDEOS) RULE**: Participants SHOULD FREQUENTLY send photos or videos! To do this, include \`[사진] <매우 구체적이고 생생한 시각적 묘사>\` or \`[동영상] <시각적 묘사>\` directly in their message text. Make the descriptions vivid and situational!
+     - Example: \`친구: [사진] 햇살이 들어오는 거실 창가 풍경, 테이블 위에 놓인 커피잔. [14:20]\`
+                        `;
+                    break;
+
                 case 'youtube':
                     platformInstruction = `[YouTube]
 ## YouTube Comment Generation
 
 ### Platform Culture
-- Reactions to video content
-- Longer, more detailed than Instagram
+- Reactions to video content (analytical, emotional, or meme-focused)
+- Longer, more detailed than Instagram. Can have intense debate in replies.
 - Rarely use hashtags
 - Mix Korean/English naturally
 
-### Comment Types
-- Supportive fans: Praise, cheering
-- Critical viewers: Criticism, counterarguments
-- Humor/meme: Funny reactions
-- Timestamp mentions: "3:42 이 부분 ㅋㅋㅋ"
-- Questions: Info requests
+### Comment Types & Tone
+**⚠️ CRITICAL: YouTube comments MUST be highly detailed, analytical, or meme-focused!**
+- **NO GENERIC PRAISE**: Do NOT write simple comments like "너무 멋있어요", "최고예요". These are BANNED.
+- **Timestamp Analysis**: "3:42 이 부분 폼 미친거 아님? ㅋㅋㅋ", "12:05 여기서 숨 멎은 사람 손"
+- **Essay/Reviewers**: Writing a 5-line serious analysis on why this specific moment is a masterpiece.
+- **Meme/Drip**: "썸네일 보고 홀린듯이 들어왔습니다", "알고리즘이 나를 이끌었다", "내 인생은 이 영상을 보기 전과 후로 나뉜다"
+- **Inside Jokes/Lore**: Reacting as if they have been following the character for years ("결국 올게 왔구나...", "우리 애가 드디어 이걸 ㅠㅠ")
+- **Intense Debates**: Replies should feature people arguing, agreeing passionately, or adding more context ("ㄴ 인정합니다", "ㄴ 아뇨 그건 아니죠")
 
 ---
 ## 🚫 CRITICAL RULES - MUST FOLLOW 🚫
@@ -2446,14 +2856,24 @@ minsu_daily: @friend_jiyoung 우리도 가자 [20분]
 1. **@@** (double @) - FORBIDDEN! Use single @ or no @ at all
 2. **Name:** field - YouTube has NO Name field! Only use User:
 3. **Name: Name** - This is meaningless garbage, never generate this
+4. **Descriptive/Childish Usernames** - BANNED! No "kpop_fan", "궁금한사람", "구독자1".
+
+### 🎯 Korean YouTube Username Master Guide (CRITICAL)
+- **Realism is Key**: Use highly realistic, quirky Korean internet naming conventions for the '한글닉네임' style.
+- **Mix the following styles for usernames**:
+  1. Noun+Animal: '안경쓴 물만두', '건전지참새', '다나카 고양이'
+  2. Wordplay/Parody: '플란다스의개노답', '내마음에안착'
+  3. Titles/Scholars: '김비서', '수석연구원', '데카르트'
+  4. Status/Cynical: '그건니생각이고', '동결이래요'
+- NEVER make the username exactly describe the comment content!
 
 ### ✅ User: Field Rules:
 - Use EITHER @handle OR nickname (pick ONE style per user)
 - Handle style: @username (single @, lowercase, underscores ok)
-- Nickname style: 한글닉네임 or EnglishNick (NO @ symbol at all)
+- Nickname style: 한글닉네임 (Use the Master Guide above! NO @ symbol!)
 - Examples:
   - ✅ User: @coffee_lover
-  - ✅ User: 커피중독자
+  - ✅ User: 선글라스감자
   - ❌ User: @@coffee_lover (BANNED!)
   - ❌ User: @커피중독자 (handles don't use Korean!)
 
@@ -2589,16 +3009,89 @@ Stats: 234L 0R 0Q
 [/POST]
 [/YouTube]`;
                     break;
+                case 'messenger':
+                    platformInstruction = `[Messenger]
+## Messenger Chat Generation
+
+### Platform Culture & Tone
+**⚠️ CRITICAL: Messenger MUST feel like a hyper-realistic, chaotic Korean KakaoTalk group chat!**
+- **Hyper-fragmentation**: Break one thought into 3-4 rapid-fire lines. NEVER send one long paragraph.
+- **Frantic Typos**: "아니 그게아니랔ㅋㅋㅋㅋ", "아 진짜 개웃기네"
+- **Timestamp Comedy (CRITICAL)**:
+  - **Rapid Fire**: 4 messages sent within the same minute [14:20]
+  - **Ignoring/Ghosting**: Someone desperately tagging someone, but the reply comes 3 hours later or not at all.
+  - **Clueless Latecomer**: Everyone moved on, but one person asks "뭔일임?" 2 hours later.
+- **Wrong Chat Room (방폭 위기)**: Accidentally sending a message meant for another chat, or sending an embarrassing photo/meme to a serious group chat.
+- **Interruption**: People talking over each other about completely different topics simultaneously.
+
+### Post Structure
+- **GENERATE EXACTLY \${maxPosts} POSTS** (Each [POST] = one distinct chat room)
+- A Room consists of a Room Name, Member List, and the Messages inside it.
+- **CRITICAL VARIETY RULE**: If generating multiple rooms, they MUST feature COMPLETELY DIFFERENT people and situations! Do NOT use the same characters over and over across different rooms unless strictly necessary.
+- **CRITICAL INTERACTION RULE**: Each room MUST feature a conversation between AT LEAST TWO different people. Do NOT generate solitary messages, diaries, monologues, or "chatting with myself" (나에게 보내기, 혼잣말).
+
+---
+## 🚫 CRITICAL RULES - MUST FOLLOW 🚫
+
+### ⚠️ INSTRUCTION ENFORCEMENT (CRITICAL!)
+- **ALL MESSAGES AND NAMES MUST REFLECT THE USER PRESET AND ADDITIONAL INSTRUCTIONS.**
+- If the instructions specify a certain tone, dialect, relationship, or theme (e.g., historical, fantasy, yandere, corporate), **the Room Name, Members' Nicknames, and Message Content MUST adapt to it completely.**
+
+### ❌ ABSOLUTELY BANNED:
+1. **@mentions in Names** - NO @ symbols allowed in Room, Members, or Nickname fields!
+2. **"Name:", "User:" fields** - Use the EXACT format provided below.
+3. **Empty fields or placeholder names** - Do not use "Participant 1", generate actual names based on the context.
+4. **NO UNDERSCORES OR COMPOUND ROLE NAMES (CRITICAL!)** - DO NOT generate nicknames like "홍보부장_자드키엘", "휴식시간_꿀잠러", "에반젤리나_기록천사", "지나가던_행정직", "닉네임_이렇게_쓰는거". **UNDER NO CIRCUMSTANCES CAN THE \`_\` SYMBOL BE USED IN NICKNAMES.** Just use clean, realistic names like "자드키엘", "김팀장", "엄마", "지수". Using contextual modifiers as nicknames is strictly prohibited.
+5. **Media with Text** - Look at the MEDIA RULES below. DO NOT mix media tags and normal message text on the same line if it's unrealistic!
+
+### 📱 MEDIA RULES (Photos & Videos)
+- **IMPORTANT**: This must be a conversation between TWO OR MORE people. Do not generate a monologue, diary, or 'chat with myself'.
+- Be creative and varied with the participants. Do not reuse the exact same side-characters and same repetitive nicknames across every generation! Each response should feature a DIFFERENT group of people or a DIFFERENT 1:1 chat partner.
+- Participants SHOULD FREQUENTLY send photos or videos!
+- **MEDIA MUST BE ITS OWN SEPARATE MESSAGE!**
+- ❌ WRONG: \`Nickname: [사진] 벚꽃 이쁘다 ㅋㅋㅋ [14:20]\`
+- ❌ WRONG: \`Nickname: [동영상] ㅋㅋㅋ 아 미쳤다 미쳤어 진짜 ㅋㅋㅋㅋ [10:05]\`
+- ✅ RIGHT (Separate messages):
+  \`Nickname: [사진] 벚꽃이 만개한 사진, 구석에 살짝 흐릿하게 브이하고 있는 손이 보인다. [14:20]\`  <- (This is the media message, the text inside is just the visual description to be rendered, NOT what the character is saying!)
+  \`Nickname: ㅋㅋㅋ 아 미쳤다 미쳤어 진짜 [14:21]\` <- (This is the actual spoken reaction)
+- The text AFTER the \`[사진]\` or \`[동영상]\` tag is the **VISUAL DESCRIPTION** of the media, NOT what the character is saying.
+
+### ✅ Format (Required fields MUST be filled)
+[POST]
+Room: Room Name (e.g. "동기 단톡방", "지수", "마법사 길드" depending on chat context)
+Members: Member names comma separated (e.g. A, B, C)
+[MESSAGES]
+Nickname: message content [Time in HH:MM format] (required - minimum 3 messages per room)
+Nickname: message content [Time in HH:MM format]
+Nickname: [사진] visual description of the photo [Time in HH:MM format]
+Nickname: message content [Time in HH:MM format]
+[/MESSAGES]
+[/POST]
+
+### Example
+[POST]
+Room: 일상 대화방 (3)
+Members: A, B, C
+[MESSAGES]
+A: 오늘 저녁 뭐 먹을까? 다들 시간 되지? [15:30]
+B: 네 저는 아무거나 괜찮아요 ㅠㅠ 오늘 일찍 끝나죠? [15:32]
+C: 오 맛있는거 먹자 저도 콜입니다 [15:35]
+A: [사진] 메뉴판 사진 [18:40]
+A: 빨리들 와라 [18:41]
+[/MESSAGES]
+[/POST]
+[/Messenger]`;
+                    break;
 
                 case 'everytime':
                     platformInstruction = `[Everytime]
 ## Everytime (에타) Post Generation
 
 ### Platform Culture
-- Anonymous university community
-- Reference Korean "Everytime" culture
-- Casual speech (반말/반존칭)
-- Daily life, complaints, questions, info sharing
+- Anonymous university community (Everytime - 에브리타임)
+- Reference Korean "Everytime" culture: cynical, blunt, realistic
+- Casual speech (반말/음슴체) ONLY. Avoid polite speech unless making fun of it.
+- Daily life, relatable university complaints (e.g. cafeteria food, professors, exams), questions, info sharing
 
 ### Diverse People
 - People with typos
@@ -2607,11 +3100,14 @@ Stats: 234L 0R 0Q
 - People who don't know {{user}} or {{char}}
 - Reactions to unknown celebrities
 
-### Comment Culture
-- Periods optional (online community)
-- Mix of short reactions and long opinions
-- Active discussion (2-25 comments)
-- Include OP (글쓴이) replies
+### Comment Types & Tone
+**⚠️ CRITICAL: Everytime (에타) MUST be extremely cynical, dry, and distinctly "University Student" culturally!**
+- **NO ENTHUSIASM/EMOJIS**: Do NOT use emojis (❤️, 😂). Do not write overly excited or passionate comments. Everything should be dry, blunt, and slightly tired.
+- **Mandatory Grammar (음슴체/반말)**: ONLY use sentences ending in ~음, ~임, ~함, ~셈. Never use ~요, ~다 unless mocking someone.
+- **Cynicism & Fact-violence**: "ㅇㅈ", "ㄱㅆㄹㅇ", "뭔 개소리임", "이게 맞지"
+- **University Lore Jokes**: Connect everything to assignments, exams, GPA, or hating professors. ("이거 볼 시간에 전공이나 봐라", "교수님 제발 휴강좀", "내 학점보다 이 얼굴이 더 완벽함")
+- **Short & Fragmented**: "미쳤네", "개존잘", "어디임?", "좌표좀"
+- **Argumentative / Trolls**: Picking fights over small details, students claiming they are better.
 
 ---
 ## 🚫 CRITICAL RULES - MUST FOLLOW 🚫
@@ -2729,35 +3225,93 @@ Stats: 15L 2S 8C
             console.log('[SNS Reactions] Sending Prompt:', prompt);
             try {
                 // Try ConnectionManagerRequestService first (no events triggered)
-                const response = await this.callDirectAPI(prompt);
+                const response = await this.callDirectAPI(prompt, mesId);
                 return response;
             } catch (error) {
+                if (error.message === 'abort') {
+                    console.log('[SNS Reactions] Generation aborted by user.');
+                    return null;
+                }
                 console.error('[SNS Reactions] Generation failed:', error);
                 return null;
             }
         }
 
         /**
-         * Direct API call using SillyTavern's current API settings
-         * Uses generateQuietPrompt with a global flag for other extensions to detect
+         * Independent Async API call bypassing SillyTavern's chat pipeline
+         * Uses jQuery AJAX to automatically inherit ST's CSRF token setup
          */
-        async callDirectAPI(prompt) {
-            const context = SillyTavern.getContext();
+        async callDirectAPI(prompt, mesId = null) {
+            const settings = window.SNS_Reactions_Settings_Instance.settings;
+            const provider = settings.provider || 'openai';
+            const model = settings.model || DEFAULT_MODELS[provider] || '';
+            const info = PROVIDERS[provider];
 
-            if (!context.generateQuietPrompt) {
-                throw new Error('generateQuietPrompt not available');
+            if (!info) {
+                throw new Error('의존할 수 없는 프로바이더: ' + provider);
             }
 
-            // Set global flag so other extensions can skip this generation
-            window.SNS_Reactions_Generating = true;
-            console.log('[SNS] Using generateQuietPrompt with global flag');
+            console.log(`[SNS Reactions] Independent API Call [${info.label} / ${model}]`);
+
+            const messages = [{ role: 'user', content: prompt }];
+
+            const parameters = {
+                model: model,
+                messages: messages,
+                temperature: 0.9,
+                stream: false,
+                chat_completion_source: info.source,
+            };
+
+            // Extract Vertex AI settings from SillyTavern's global context
+            if (provider === 'vertexai') {
+                const stSettings = window.SillyTavern?.getContext?.()?.chatCompletionSettings || {};
+                parameters.vertexai_auth_mode = stSettings.vertexai_auth_mode || 'express';
+                if (stSettings.vertexai_region) parameters.vertexai_region = stSettings.vertexai_region;
+                if (stSettings.vertexai_express_project_id) parameters.vertexai_express_project_id = stSettings.vertexai_express_project_id;
+            }
 
             try {
-                const response = await context.generateQuietPrompt(prompt, true, false);
-                return response || '';
-            } finally {
-                // Always clear flag
-                window.SNS_Reactions_Generating = false;
+                const request = $.ajax({
+                    url: '/api/backends/chat-completions/generate',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(parameters),
+                });
+
+                window.SNS_Reactions = window.SNS_Reactions || {};
+                window.SNS_Reactions.activeRequests = window.SNS_Reactions.activeRequests || {};
+                if (mesId) {
+                    window.SNS_Reactions.activeRequests[mesId] = request;
+                }
+
+                const response = await request;
+
+                if (mesId) {
+                    delete window.SNS_Reactions.activeRequests[mesId];
+                }
+
+                // jQuery automatically parses JSON for us
+                if (typeof response === 'string') return response;
+                if (response && response.choices && response.choices[0] && response.choices[0].message) {
+                    return response.choices[0].message.content;
+                }
+                if (response && response.content) return response.content;
+                return String(response);
+
+            } catch (jqXHR) {
+                if (mesId) {
+                    delete window.SNS_Reactions.activeRequests[mesId];
+                }
+                if (jqXHR.statusText === 'abort' || jqXHR.readyState === 0) {
+                    throw new Error('abort');
+                }
+                let msg = 'HTTP ' + jqXHR.status;
+                try {
+                    const err = jqXHR.responseJSON || JSON.parse(jqXHR.responseText);
+                    msg = (err && err.error && err.error.message) || (err && err.message) || msg;
+                } catch (_e) { /* ignore */ }
+                throw new Error(msg);
             }
         }
 
@@ -2872,9 +3426,9 @@ Stats: 15L 2S 8C
                 const currentIdx = parseInt(currentMesId);
                 if (isNaN(currentIdx)) return "";
 
-                // Get the last N messages before current (not including current)
-                const startIdx = Math.max(0, currentIdx - contextCount);
-                const endIdx = currentIdx;
+                // Get the last N messages up to and including current
+                const startIdx = Math.max(0, currentIdx - contextCount + 1);
+                const endIdx = currentIdx + 1;
 
                 let chatContext = "";
 
@@ -3022,14 +3576,7 @@ Stats: 15L 2S 8C
             $(element).addClass('active');
 
             // Create modal below grid
-            const modal = $(`
-                <div class="sns-media-modal">
-                    <div class="sns-media-modal-content">
-                        ${window.SNS_Reactions.Utils.escapeHtml(description)}
-                    </div>
-                    <button class="sns-media-modal-close" onclick="$(this).closest('.sns-media-modal').remove(); return false;">×</button>
-                </div>
-            `);
+            const modal = $(`<div class="sns-media-modal"><div class="sns-media-modal-content">${window.SNS_Reactions.Utils.escapeHtml(description)}</div><button class="sns-media-modal-close" onclick="$(this).closest('.sns-media-modal').remove(); return false;">×</button></div>`);
 
             grid.after(modal);
         },
@@ -3478,6 +4025,60 @@ Stats: 15L 2S 8C
             }
         },
 
+        setProvider: (val) => {
+            const settings = window.SNS_Reactions_Settings_Instance;
+            if (settings) {
+                settings.settings.provider = val;
+
+                // Set default model for the new provider
+                const defaultModel = DEFAULT_MODELS[val] || '';
+                settings.settings.model = defaultModel;
+
+                settings.save();
+
+                // Dynamically update the model dropdown to avoid re-rendering the whole menu and closing it
+                const currentProviderModels = PROVIDER_MODELS[val] || [];
+                const isCustomModel = currentProviderModels.indexOf(defaultModel) === -1 && defaultModel !== '';
+
+                let modelOptions = '<option value="">모델 선택...</option>';
+                currentProviderModels.forEach(m => {
+                    const selected = defaultModel === m ? 'selected' : '';
+                    modelOptions += `<option value="${m}" ${selected}>${m}</option>`;
+                });
+                modelOptions += `<option value="__custom__" ${isCustomModel ? 'selected' : ''}>직접 입력</option>`;
+
+                $('#sns_model_select').html(modelOptions);
+                $('#sns_model_custom').val(isCustomModel ? defaultModel : '');
+                if (isCustomModel) {
+                    $('#sns_model_custom').show();
+                } else {
+                    $('#sns_model_custom').hide();
+                }
+            }
+        },
+
+        setModelSelect: (val) => {
+            const settings = window.SNS_Reactions_Settings_Instance;
+            if (settings) {
+                if (val !== '__custom__') {
+                    settings.settings.model = val;
+                    settings.save();
+                    $('#sns_model_custom').hide();
+                } else {
+                    $('#sns_model_custom').show();
+                }
+            }
+        },
+
+        setModelCustom: (val) => {
+            const settings = window.SNS_Reactions_Settings_Instance;
+            if (settings) {
+                settings.settings.model = val;
+                // Use silent save so we don't accidentally close/re-render the menu while typing
+                settings.save(false);
+            }
+        },
+
         setPreset: (idx) => {
             const settings = window.SNS_Reactions_Settings_Instance;
             if (settings) {
@@ -3677,15 +4278,47 @@ Stats: 15L 2S 8C
                 const messageElement = $(`.mes[mesid="${mesId}"]`);
                 if (messageElement.length === 0) return;
                 const container = messageElement.find('.sns-injection-point');
+                const reactionWrapper = container.closest('.sns-reaction-wrapper');
 
                 // Show Generating Status
-                // If appending, maybe don't wipe whole container?
-                // But for simplicity, we show global loading or overlay.
-                // Or modify the button if it's the initial generation.
-                // If it's a re-generation/add, we might want to keep showing old content until new one is ready?
-                // For now, simple textual indication if "Add".
-
                 if (window.toastr) toastr.info('SNS 리액션 생성 중...');
+
+                // Ensure theme class is applied directly to overlay since parent container might not have it yet on first run
+                const currentMode = settings.get().themeMode || 'dark';
+                const themeClass = currentMode === 'light' ? 'sns-theme-light' : 'sns-theme-dark';
+
+                // Create and show Loading Overlay
+                const loadingOverlay = $(`
+                    <div class="sns-loading-overlay ${themeClass}">
+                        <div class="sns-loading-content">
+                            <i class="fa-solid fa-spinner fa-spin sns-loading-spinner"></i>
+                            <div class="sns-loading-text">SNS 반응 생성 중...</div>
+                            <button class="sns-cancel-btn menu_button danger"><i class="fa-solid fa-xmark"></i> <span>취소</span></button>
+                        </div>
+                    </div>
+                `);
+
+                // Ensure parent has relative position for absolute overlay
+                if (reactionWrapper.length > 0 && reactionWrapper.css('position') === 'static') {
+                    reactionWrapper.css('position', 'relative');
+                }
+
+                // Remove existing overlay if any
+                container.find('.sns-loading-overlay').remove();
+                if (reactionWrapper.length > 0) {
+                    reactionWrapper.find('.sns-loading-overlay').remove();
+                    reactionWrapper.append(loadingOverlay);
+                } else {
+                    if (container.css('position') === 'static') container.css('position', 'relative');
+                    container.append(loadingOverlay);
+                }
+
+                // Bind Cancel Action
+                loadingOverlay.find('.sns-cancel-btn').on('click', () => {
+                    if (window.SNS_Reactions && window.SNS_Reactions.activeRequests && window.SNS_Reactions.activeRequests[mesId]) {
+                        window.SNS_Reactions.activeRequests[mesId].abort();
+                    }
+                });
 
                 // Add loading state - change button content
                 const headerBtn = messageElement.find('.sns-header-btn');
@@ -3726,12 +4359,13 @@ Stats: 15L 2S 8C
                     settings.settings.instructions = originalInstructions;
                 }
 
-                // Remove loading state
+                // Remove loading state & Overlay
                 messageElement.find('.sns-header-btn').prop('disabled', false).removeClass('sns-loading');
                 const restoreBtn = container.find('.sns-start-generate-btn');
                 if (restoreBtn.length && restoreBtn.data('original-html')) {
                     restoreBtn.prop('disabled', false).html(restoreBtn.data('original-html'));
                 }
+                messageElement.find('.sns-loading-overlay').remove();
 
                 if (response) {
                     const parsedData = parser.parse(response);
@@ -4014,6 +4648,7 @@ Stats: 15L 2S 8C
                 const settings = window.SNS_Reactions_Settings_Instance;
                 const controller = window.SNS_Reactions.Controller;
                 const stored = settings.getFromMessage(mesId);
+
                 let pages = controller.normalizePages(stored ? stored.data : null);
                 let rawTexts = (stored && stored.rawTexts) ? stored.rawTexts : [];
 
@@ -4021,11 +4656,25 @@ Stats: 15L 2S 8C
                 if (curIdx < 0) curIdx = 0;
                 if (curIdx >= pages.length) curIdx = pages.length - 1;
 
+                // Extract the preserved platform explicitly from the specific page being edited
+                let savedPlatform = null;
+                if (pages[curIdx] && pages[curIdx].length > 0 && pages[curIdx][0].platform) {
+                    savedPlatform = pages[curIdx][0].platform;
+                } else if (stored) {
+                    savedPlatform = stored.platform; // Fallback to global platform
+                }
+
+                // Re-inject the correct platform into parsed posts before saving
+                if (savedPlatform) {
+                    newPosts.forEach(p => p.platform = savedPlatform);
+                }
+
                 // Update Page
                 pages[curIdx] = newPosts;
                 rawTexts[curIdx] = raw; // Update raw text with edited version
 
-                settings.saveToMessage(mesId, pages, rawTexts);
+                // Save with the 4th argument to preserve the platform
+                settings.saveToMessage(mesId, pages, rawTexts, savedPlatform);
 
                 const messageElement = $(`.mes[mesid="${mesId}"]`);
                 const container = messageElement.find('.sns-reaction-wrapper');
@@ -4035,239 +4684,278 @@ Stats: 15L 2S 8C
                 if (window.toastr) toastr.success('변경사항 저장됨');
             },
 
-            renderStartButton: (mesId) => {
-                const messageElement = $(`.mes[mesid="${mesId}"]`);
-                const container = messageElement.find('.sns-injection-point');
-                const settings = window.SNS_Reactions_Settings_Instance;
+            /* // --- DEPRECATED: Initial Generation UI Rendering ---
+            // This function is no longer used as the initial UI is now rendered through the main redraw flow.
+            // It is kept commented out for reference.
+                renderStartButton: (mesId) => {
+                    const messageElement = $(`.mes[mesid="${mesId}"]`);
+                    const container = messageElement.find('.sns-injection-point');
+                    const settings = window.SNS_Reactions_Settings_Instance;
 
-                // Get current settings for defaults
-                const lastPlatform = settings.settings.lastPlatform || 'twitter';
-                const maxPosts = settings.get().maxPosts || 3;
-                const presets = settings.getCurrentPresets(); // Use platform-specific presets
-                const activePresetIdx = settings.getPresetIndex(); // '' means None selected
+                    // Get current settings for defaults
+                    const lastPlatform = settings.settings.lastPlatform || 'twitter';
+                    const maxPosts = settings.get().maxPosts || 3;
+                    const presets = settings.getCurrentPresets(); // Use platform-specific presets
+                    const activePresetIdx = settings.getPresetIndex(); // '' means None selected
 
-                // Sync instructions with current platform's preset on render
-                // This ensures no cross-platform contamination
-                if (activePresetIdx !== '' && presets[activePresetIdx]) {
-                    settings.settings.instructions = presets[activePresetIdx].content;
-                } else {
-                    settings.settings.instructions = '';
-                }
-                settings.save(false); // Silent save
+                    // Sync instructions with current platform's preset on render
+                    // This ensures no cross-platform contamination
+                    if (activePresetIdx !== '' && presets[activePresetIdx]) {
+                        settings.settings.instructions = presets[activePresetIdx].content;
+                    } else {
+                        settings.settings.instructions = '';
+                    }
+                    settings.save(false); // Silent save
 
-                // Build Preset Options
-                const presetOptions = presets.map((p, idx) => {
-                    const selected = String(idx) === String(activePresetIdx) ? 'selected' : '';
-                    return `<option value="${idx}" ${selected}>${window.SNS_Reactions.Utils.escapeHtml(p.name)}</option>`;
-                }).join('');
+                    // Build Preset Options
+                    const presetOptions = presets.map((p, idx) => {
+                        const selected = String(idx) === String(activePresetIdx) ? 'selected' : '';
+                        return `<option value="${idx}" ${selected}>${window.SNS_Reactions.Utils.escapeHtml(p.name)}</option>`;
+                    }).join('');
 
-                // Platform icons
-                const platforms = [
-                    { id: 'twitter', icon: 'fa-brands fa-twitter', label: 'Twitter' },
-                    { id: 'instagram', icon: 'fa-brands fa-instagram', label: 'Instagram' },
-                    { id: 'youtube', icon: 'fa-brands fa-youtube', label: 'YouTube' },
-                    { id: 'everytime', icon: 'fa-solid fa-user-graduate', label: 'Everytime' }
-                ];
+                    // Platform icons
+                    const platforms = [
+                        { id: 'twitter', icon: 'fa-brands fa-twitter', label: 'Twitter' },
+                        { id: 'instagram', icon: 'fa-brands fa-instagram', label: 'Instagram' },
+                        { id: 'youtube', icon: 'fa-brands fa-youtube', label: 'YouTube' },
+                        { id: 'everytime', icon: 'fa-solid fa-user-graduate', label: 'Everytime' },
+                        { id: 'messenger', icon: 'fa-solid fa-comment-dots', label: 'Messenger' }
+                    ];
 
-                const platformButtons = platforms.map(p => {
-                    const active = p.id === lastPlatform ? 'active' : '';
-                    return `<button type="button" class="sns-start-platform-btn ${p.id} ${active}" data-platform="${p.id}" title="${p.label}">
-                        <i class="${p.icon}"></i>
-                    </button>`;
-                }).join('');
+                    const platformButtons = platforms.map(p => {
+                        const active = p.id === lastPlatform ? 'active' : '';
+                        return `<button type="button" class="sns-start-platform-btn ${p.id} ${active}" data-platform="${p.id}" title="${p.label}">
+                            <i class="${p.icon}"></i>
+                        </button>`;
+                    }).join('');
 
-                const html = `
-                <div class="sns-start-config" data-mesid="${mesId}">
-                    <div class="sns-start-row">
-                        <div class="sns-start-platforms">
-                            ${platformButtons}
+                    const html = \`
+                    <div class="sns-start-config" data-mesid="${mesId}">
+                        <div class="sns-start-row">
+                            <div class="sns-start-platforms">
+                                \${platformButtons}
+                            </div>
+                            <div class="sns-start-count">
+                                <label>개수:</label>
+                                <input type="number" class="sns-start-count-input" min="1" max="10" value="\${maxPosts}">
+                            </div>
+                            <div class="sns-start-lang">
+                                <select class="sns-start-lang-select">
+                                    <option value="ko" \${settings.settings.language === 'ko' ? 'selected' : ''}>한국어</option>
+                                    <option value="en" \${settings.settings.language === 'en' ? 'selected' : ''}>English</option>
+                                    <option value="ja" \${settings.settings.language === 'ja' ? 'selected' : ''}>日本語</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="sns-start-count">
-                            <label>개수:</label>
-                            <input type="number" class="sns-start-count-input" min="1" max="10" value="${maxPosts}">
-                        </div>
-                        <div class="sns-start-lang">
-                            <select class="sns-start-lang-select">
-                                <option value="ko" ${settings.settings.language === 'ko' ? 'selected' : ''}>한국어</option>
-                                <option value="en" ${settings.settings.language === 'en' ? 'selected' : ''}>English</option>
-                                <option value="ja" ${settings.settings.language === 'ja' ? 'selected' : ''}>日本語</option>
+                        <div class="sns-start-row">
+                            <label>프리셋:</label>
+                            <select class="sns-start-preset-select">
+                                <option value="">-- 없음 --</option>
+                                \${presetOptions}
                             </select>
                         </div>
+                        <div class="sns-start-row">
+                            <textarea class="sns-start-instruction-input" placeholder="추가 지시사항 입력" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';window.SNS_Reactions.Actions.setAdditionalInstruction(this.value)" style="flex:1; padding: 6px; border-radius:4px; border:1px solid rgba(127,127,127,0.3); resize:none; overflow-y:hidden; min-height:34px;" rows="1" spellcheck="false">\${window.SNS_Reactions.Utils.escapeHtml(settings.settings.additionalInstruction || "")}</textarea>
+                        </div>
+                        <button class="sns-generate-btn sns-start-generate-btn">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> SNS 생성
+                        </button>
                     </div>
-                    <div class="sns-start-row">
-                        <label>프리셋:</label>
-                        <select class="sns-start-preset-select">
-                            <option value="">-- 없음 --</option>
-                            ${presetOptions}
-                        </select>
-                    </div>
-                    <div class="sns-start-row">
-                        <textarea class="sns-start-instruction-input" placeholder="추가 지시사항 입력" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';window.SNS_Reactions.Actions.setAdditionalInstruction(this.value)" style="flex:1; padding: 6px; border-radius:4px; border:1px solid rgba(127,127,127,0.3); resize:none; overflow-y:hidden; min-height:34px;" rows="1" spellcheck="false">${window.SNS_Reactions.Utils.escapeHtml(settings.settings.additionalInstruction || "")}</textarea>
-                    </div>
-                    <button class="sns-generate-btn sns-start-generate-btn">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> SNS 생성
-                    </button>
-                </div>
-                `;
+                    \`;
 
-                container.html(html);
+                    container.html(html);
 
-                // Bind Events
-                const configContainer = container.find('.sns-start-config');
-                // TRIGGER auto-resize for start button input
-                const startInst = configContainer.find('.sns-start-instruction-input');
-                if (startInst.length > 0 && startInst.val()) {
-                    startInst.css('height', 'auto'); // Reset
-                    startInst.css('height', startInst[0].scrollHeight + 'px');
-                }
+                    // Bind Events
+                    const configContainer = container.find('.sns-start-config');
+                    // TRIGGER auto-resize for start button input
+                    const startInst = configContainer.find('.sns-start-instruction-input');
+                    if (startInst.length > 0 && startInst.val()) {
+                        startInst.css('height', 'auto'); // Reset
+                        startInst.css('height', startInst[0].scrollHeight + 'px');
+                    }
 
-                // Platform buttons
-                configContainer.find('.sns-start-platform-btn').on('click', function (e) {
-                    e.stopPropagation();
-                    configContainer.find('.sns-start-platform-btn').removeClass('active');
-                    $(this).addClass('active');
+                    // Platform buttons
+                    configContainer.find('.sns-start-platform-btn').on('click', function (e) {
+                        e.stopPropagation();
+                        configContainer.find('.sns-start-platform-btn').removeClass('active');
+                        $(this).addClass('active');
 
-                    // Update settings
-                    const platform = $(this).data('platform');
-                    settings.settings.lastPlatform = platform;
-                    settings.save();
+                        // Update settings
+                        const platform = $(this).data('platform');
+                        settings.settings.lastPlatform = platform;
+                        settings.save();
 
-                    // Update preset dropdown for new platform
-                    const newPresets = settings.getCurrentPresets();
-                    const presetSelect = configContainer.find('.sns-start-preset-select');
+                        // Update preset dropdown for new platform
+                        const newPresets = settings.getCurrentPresets();
+                        const presetSelect = configContainer.find('.sns-start-preset-select');
 
-                    if (presetSelect.length > 0) {
-                        let html = '<option value="">-- 없음 --</option>';
+                        if (presetSelect.length > 0) {
+                            let html = '<option value="">-- 없음 --</option>';
 
-                        // Retrieve the saved preset index for THIS platform
-                        let savedIdx = settings.getPresetIndex();
-                        // Validate existence
-                        if (savedIdx !== "" && !newPresets[savedIdx]) {
-                            savedIdx = "";
+                            // Retrieve the saved preset index for THIS platform
+                            let savedIdx = settings.getPresetIndex();
+                            // Validate existence
+                            if (savedIdx !== "" && !newPresets[savedIdx]) {
+                                savedIdx = "";
+                            }
+
+                            if (newPresets.length > 0) {
+                                newPresets.forEach((p, idx) => {
+                                    const selected = String(idx) === String(savedIdx) ? 'selected' : '';
+                                    html += \`<option value="\${idx}" \${selected}>\${window.SNS_Reactions.Utils.escapeHtml(p.name)}</option>\`;
+                                });
+                            }
+
+                            presetSelect.html(html);
+
+                            // Sync global instructions with the restored preset
+                            // This ensures that when platform switches, the instructions are ready to go
+                            if (savedIdx !== "" && newPresets[savedIdx]) {
+                                settings.settings.instructions = newPresets[savedIdx].content;
+                                settings.save();
+                            } else {
+                                // Clear instructions if no preset (prevent cross-contamination)
+                                settings.settings.instructions = "";
+                                settings.save();
+                            }
                         }
+                    });
 
-                        if (newPresets.length > 0) {
-                            newPresets.forEach((p, idx) => {
-                                const selected = String(idx) === String(savedIdx) ? 'selected' : '';
-                                html += `<option value="${idx}" ${selected}>${window.SNS_Reactions.Utils.escapeHtml(p.name)}</option>`;
-                            });
-                        }
+                    // Count input
+                    configContainer.find('.sns-start-count-input').on('change', function () {
+                        settings.settings.maxPosts = Number($(this).val());
+                        settings.save();
+                    });
 
-                        presetSelect.html(html);
+                    // Language select
+                    configContainer.find('.sns-start-lang-select').on('change', function () {
+                        window.SNS_Reactions.Actions.setLanguage($(this).val());
+                    });
 
-                        // Sync global instructions with the restored preset
-                        // This ensures that when platform switches, the instructions are ready to go
-                        if (savedIdx !== "" && newPresets[savedIdx]) {
-                            settings.settings.instructions = newPresets[savedIdx].content;
-                            settings.save();
+                    // Preset select
+                    configContainer.find('.sns-start-preset-select').on('change', function () {
+                        const idx = $(this).val();
+                        settings.setPresetIndex(idx);
+
+                        // Sync content
+                        const presets = settings.getCurrentPresets();
+                        if (idx !== "" && presets[idx]) {
+                            settings.settings.instructions = presets[idx].content;
                         } else {
-                            // Clear instructions if no preset (prevent cross-contamination)
+                            // Clear instructions when no preset is selected (prevent cross-contamination)
                             settings.settings.instructions = "";
-                            settings.save();
                         }
-                    }
-                });
-
-                // Count input
-                configContainer.find('.sns-start-count-input').on('change', function () {
-                    settings.settings.maxPosts = Number($(this).val());
-                    settings.save();
-                });
-
-                // Language select
-                configContainer.find('.sns-start-lang-select').on('change', function () {
-                    window.SNS_Reactions.Actions.setLanguage($(this).val());
-                });
-
-                // Preset select
-                configContainer.find('.sns-start-preset-select').on('change', function () {
-                    const idx = $(this).val();
-                    settings.setPresetIndex(idx);
-
-                    // Sync content
-                    const presets = settings.getCurrentPresets();
-                    if (idx !== "" && presets[idx]) {
-                        settings.settings.instructions = presets[idx].content;
-                    } else {
-                        // Clear instructions when no preset is selected (prevent cross-contamination)
-                        settings.settings.instructions = "";
-                    }
-                    settings.save();
-                });
-
-                // Listen for preset changes from settings panel
-                $(document).on('sns-presets-changed', function () {
-                    // Always refresh dropdown based on currently active platform in this dropdown
-                    const activePlatform = configContainer.find('.sns-start-platform-btn.active').data('platform') || 'twitter';
-
-                    // Temporarily set lastPlatform to get correct presets
-                    const oldPlatform = settings.settings.lastPlatform;
-                    settings.settings.lastPlatform = activePlatform;
-
-                    const newPresets = settings.getCurrentPresets();
-                    const activeIdx = settings.getPresetIndex();
-
-                    // Restore original lastPlatform
-                    settings.settings.lastPlatform = oldPlatform;
-
-                    let html = '<option value="">-- 없음 --</option>';
-                    newPresets.forEach((p, idx) => {
-                        const selected = String(idx) === String(activeIdx) ? 'selected' : '';
-                        html += `<option value="${idx}" ${selected}>${window.SNS_Reactions.Utils.escapeHtml(p.name)}</option>`;
+                        settings.save();
                     });
-                    configContainer.find('.sns-start-preset-select').html(html);
-                });
 
-                // Settings Menu - Platform Tab Click
-                $(document).on('click', '.sns-platform-tab', function () {
-                    const platform = $(this).data('platform');
+                    // Listen for preset changes from settings panel
+                    $(document).on('sns-presets-changed', function () {
+                        // Always refresh dropdown based on currently active platform in this dropdown
+                        const activePlatform = configContainer.find('.sns-start-platform-btn.active').data('platform') || 'twitter';
 
-                    // Visual Update
-                    $('.sns-platform-tab').removeClass('menu_button_checked');
-                    $(this).addClass('menu_button_checked');
+                        // Temporarily set lastPlatform to get correct presets
+                        const oldPlatform = settings.settings.lastPlatform;
+                        settings.settings.lastPlatform = activePlatform;
 
-                    // Update Settings
-                    settings.settings.lastPlatform = platform;
+                        const newPresets = settings.getCurrentPresets();
+                        const activeIdx = settings.getPresetIndex();
 
-                    // Automatically Load Preset Index for this platform
-                    const presetIdx = settings.getPresetIndex() || "";
-                    settings.setPresetIndex(presetIdx);
+                        // Restore original lastPlatform
+                        settings.settings.lastPlatform = oldPlatform;
 
-                    // Refresh Preset Dropdown
-                    const presets = settings.getCurrentPresets();
-                    const presetSelect = $('#sns_instruction_presets');
-
-                    // Update Instructions
-                    if (presetIdx !== "" && presets[presetIdx]) {
-                        settings.settings.instructions = presets[presetIdx].content;
-                    } else {
-                        // Clear instructions to avoid cross-contamination
-                        settings.settings.instructions = "";
-                    }
-                    settings.save();
-
-                    let html = '<option value="">-- New Preset --</option>';
-                    presets.forEach((p, idx) => {
-                        html += `<option value="${idx}">${window.SNS_Reactions.Utils.escapeHtml(p.name)}</option>`;
+                        let html = '<option value="">-- 없음 --</option>';
+                        newPresets.forEach((p, idx) => {
+                            const selected = String(idx) === String(activeIdx) ? 'selected' : '';
+                            html += \`<option value="\${idx}" \${selected}>\${window.SNS_Reactions.Utils.escapeHtml(p.name)}</option>\`;
+                        });
+                        configContainer.find('.sns-start-preset-select').html(html);
                     });
-                    presetSelect.html(html);
-                });
 
-                // Generate button
-                configContainer.find('.sns-start-generate-btn').on('click', async function (e) {
-                    e.stopPropagation();
-                    const platform = configContainer.find('.sns-start-platform-btn.active').data('platform') || 'twitter';
-                    const instructionOverride = configContainer.find('.sns-start-instruction-input').val() || '';
+                    // Settings Menu - Platform Tab Click
+                    $(document).on('click', '.sns-platform-tab', function () {
+                        const platform = $(this).data('platform');
 
-                    // Save additionalInstruction before generating
-                    settings.settings.additionalInstruction = instructionOverride;
-                    settings.save();
+                        // Visual Update
+                        $('.sns-platform-tab').removeClass('menu_button_checked messenger-active');
+                        if (platform === 'messenger') {
+                            $(this).addClass('messenger-active');
+                        } else {
+                            $(this).addClass('menu_button_checked');
+                        }
 
-                    const controller = window.SNS_Reactions.Controller;
-                    if (controller) controller.generateAction(mesId, 'append', platform, instructionOverride);
-                });
-            }
+                        // Update Settings
+                        settings.settings.lastPlatform = platform;
+
+                        // Automatically Load Preset Index for this platform
+                        const presetIdx = settings.getPresetIndex() || "";
+                        settings.setPresetIndex(presetIdx);
+
+                        // Refresh Preset Dropdown
+                        const presets = settings.getCurrentPresets();
+                        const presetSelect = $('#sns_instruction_presets');
+
+                        // Update Instructions
+                        if (presetIdx !== "" && presets[presetIdx]) {
+                            settings.settings.instructions = presets[presetIdx].content;
+                        } else {
+                            // Clear instructions to avoid cross-contamination
+                            settings.settings.instructions = "";
+                        }
+                        settings.save();
+
+                        let html = '<option value="">-- New Preset --</option>';
+                        presets.forEach((p, idx) => {
+                            html += \`<option value="\${idx}">\${window.SNS_Reactions.Utils.escapeHtml(p.name)}</option>\`;
+                        });
+                        presetSelect.html(html);
+                    });
+
+                    // Generate button
+                    configContainer.find('.sns-start-generate-btn').on('click', async function (e) {
+                        e.stopPropagation();
+                        const platform = configContainer.find('.sns-start-platform-btn.active').data('platform') || 'twitter';
+                        const instructionOverride = configContainer.find('.sns-start-instruction-input').val() || '';
+
+                        // Save additionalInstruction before generating
+                        settings.settings.additionalInstruction = instructionOverride;
+                        settings.save();
+
+                        const controller = window.SNS_Reactions.Controller;
+                        if (controller) controller.generateAction(mesId, 'append', platform, instructionOverride);
+                    });
+                }
+            */
         };
+
+        // --- Global Event Listener for Preset Updates ---
+        // Moved outside of the deprecated renderStartButton to ensure it functions
+        // correctly for the dynamically generated start config in the redraw flow.
+        $(document).on('sns-presets-changed', function () {
+            // Update all visible initial generation wrappers when presets change in settings
+            $('.sns-start-config').each(function () {
+                const configContainer = $(this);
+                const activePlatform = configContainer.find('.sns-start-platform-btn.active').data('platform') || 'twitter';
+                const settings = window.SNS_Reactions_Settings_Instance;
+                if (!settings) return;
+
+                // Temporarily set lastPlatform to get correct presets
+                const oldPlatform = settings.settings.lastPlatform;
+                settings.settings.lastPlatform = activePlatform;
+
+                const newPresets = settings.getCurrentPresets();
+                const activeIdx = settings.getPresetIndex();
+
+                // Restore original lastPlatform
+                settings.settings.lastPlatform = oldPlatform;
+
+                let html = '<option value="">-- 없음 --</option>';
+                newPresets.forEach((p, idx) => {
+                    const selected = String(idx) === String(activeIdx) ? 'selected' : '';
+                    html += `<option value="${idx}" ${selected}>${window.SNS_Reactions.Utils.escapeHtml(p.name)}</option>`;
+                });
+                configContainer.find('.sns-start-preset-select').html(html);
+            });
+        });
 
         const context = SillyTavern.getContext();
 
