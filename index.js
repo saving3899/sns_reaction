@@ -2818,7 +2818,7 @@ Members: <Comma-separated list of participants>
    - Use short, fragmented messages typical of real-world text messaging. INCLUDE TYPOS!
    - Use typical messenger slang (ㅋㅋ, ㅎㅎ, ㅠ), internet abbreviations, and realistic emotional swings where appropriate. Let them interrupt each other.
    - **CRITICAL**: Do NOT generate solitary messages, diaries, or self-chats ("혼잣말", "나에게 보내기"). The chat MUST involve AT LEAST TWO different interacting people.
-   - **NICKNAME RULE**: Absolutely NEVER use underscores (\`_\`) or descriptive role prefixes in names! Just use "김팀장", "지수", NOT "영업팀_김팀장" or "짜증난_지수".
+   - **NICKNAME RULE**: Absolutely NEVER use underscores (\`_\`) or descriptive role prefixes in names! Just use "Alex", "Mira", NOT "Sales_Alex" or "Angry_Mira". (Use names appropriate to the chat's setting/language.)
    - The \`{{user}}\` (or main character) should participate in the chat if relevant, and their name should match the character context.
    - Ensure the timestamps flow logically (e.g., sequentially increasing).
    - **MEDIA (PHOTOS/VIDEOS) RULE**: Participants SHOULD FREQUENTLY send photos or videos! To do this, include \`[사진] <매우 구체적이고 생생한 시각적 묘사>\` or \`[동영상] <시각적 묘사>\` directly in their message text. Make the descriptions vivid and situational!
@@ -3041,7 +3041,7 @@ Stats: 234L 0R 0Q
 1. **@mentions in Names** - NO @ symbols allowed in Room, Members, or Nickname fields!
 2. **"Name:", "User:" fields** - Use the EXACT format provided below.
 3. **Empty fields or placeholder names** - Do not use "Participant 1", generate actual names based on the context.
-4. **NO UNDERSCORES OR COMPOUND ROLE NAMES (CRITICAL!)** - DO NOT generate nicknames like "홍보부장_자드키엘", "휴식시간_꿀잠러", "에반젤리나_기록천사", "지나가던_행정직", "닉네임_이렇게_쓰는거". **UNDER NO CIRCUMSTANCES CAN THE \`_\` SYMBOL BE USED IN NICKNAMES.** Just use clean, realistic names like "자드키엘", "김팀장", "엄마", "지수". Using contextual modifiers as nicknames is strictly prohibited.
+4. **NO UNDERSCORES OR COMPOUND ROLE NAMES (CRITICAL!)** - DO NOT generate nicknames like "PR_Zadkiel", "Naptime_Sleeper", "Evangelina_Recorder", "Passerby_Admin", "Name_Like_This". **UNDER NO CIRCUMSTANCES CAN THE \`_\` SYMBOL BE USED IN NICKNAMES.** Just use clean, realistic names like "Zadkiel", "Alex", "Mom", "Mira". Adapt names to match the chat's setting/language. Using contextual modifiers as nicknames is strictly prohibited.
 5. **Media with Text** - Look at the MEDIA RULES below. DO NOT mix media tags and normal message text on the same line if it's unrealistic!
 
 ### 📱 MEDIA RULES (Photos & Videos)
@@ -3058,7 +3058,7 @@ Stats: 234L 0R 0Q
 
 ### ✅ Format (Required fields MUST be filled)
 [POST]
-Room: Room Name (e.g. "동기 단톡방", "지수", "마법사 길드" depending on chat context)
+Room: Room Name (e.g. "Friend Group Chat", "Mira", "Wizard Guild" — adapt to chat context's setting/language)
 Members: Member names comma separated (e.g. A, B, C)
 [MESSAGES]
 Nickname: message content [Time in HH:MM format] (required - minimum 3 messages per room)
@@ -3221,6 +3221,16 @@ Stats: 15L 2S 8C
 - Start output immediately after </System>
 
 </System>`;
+
+            // Replace SillyTavern macros ({{char}}, {{user}}, etc.)
+            try {
+                const stContext = SillyTavern.getContext();
+                if (stContext && typeof stContext.substituteParams === 'function') {
+                    prompt = stContext.substituteParams(prompt);
+                }
+            } catch (macroError) {
+                console.warn('[SNS Reactions] Macro substitution failed, using raw prompt:', macroError);
+            }
 
             console.log('[SNS Reactions] Sending Prompt:', prompt);
             try {
